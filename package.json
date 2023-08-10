@@ -1,0 +1,48 @@
+{
+  "name": "graphql-server-boilerplate",
+  "version": "0.0.1",
+  "main": "index.js",
+  "description": "This GraphQL server boilerplate provides a basic structure for building servers.",
+  "repository": "git@github.com:Innovixx-Development/graphql-server-boilerplate.git",
+  "author": "Kalon Robson <kalon.robson@innovixx.co.uk>",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "build": "tsc",
+    "serve": "node ./dist/index.js",
+    "cleanDev": "yarn db:reset && ts-node ./src/seed && yarn dev",
+    "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
+    "db:migrate:main:prod": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
+    "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.4",
+    "@graphql-tools/schema": "^10.0.0",
+    "@graphql-tools/utils": "^10.0.1",
+    "@prisma/client": "4.16.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.8",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "graphql": "^16.7.0",
+    "graphql-tag": "^2.12.6",
+    "helmet": "^7.0.0",
+    "lodash.merge": "^4.6.2",
+    "prisma": "^4.16.0"
+  },
+  "devDependencies": {
+    "@innovixx/eslint-config": "^1.1.0",
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
+    "@types/lodash.merge": "^4.6.7",
+    "@types/node": "^20.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
+  }
+}
