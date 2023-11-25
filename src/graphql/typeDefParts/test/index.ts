@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const testTypeDefs = gql`
+export const a = gql`
     type Query {
       test: String
     }

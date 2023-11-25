@@ -1,6 +1,7 @@
 import { PrismaClient as MainDBPrismaClient } from '../../databases/maindb/client';
 
 export const maindb = new MainDBPrismaClient({
+  errorFormat: 'minimal',
   log: [
     { emit: 'event', level: 'query' },
     {
@@ -12,5 +13,4 @@ export const maindb = new MainDBPrismaClient({
       level: 'warn',
     },
   ],
-  errorFormat: 'minimal',
 });

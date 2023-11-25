@@ -1,8 +1,8 @@
+import path from 'path';
+import { createServer } from 'http';
 import { config as dotenv } from 'dotenv';
 import express, { Application } from 'express';
 import cookieParser from 'cookie-parser';
-import path from 'path';
-import { createServer } from 'http';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
 import { expressMiddleware } from '@apollo/server/express4';
@@ -20,7 +20,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const mount = async (app: Application) => {
   try {
-    const schema = makeExecutableSchema({ typeDefs, resolvers });
+    const schema = makeExecutableSchema({ resolvers, typeDefs });
 
     const httpServer = createServer(app);
 
@@ -28,16 +28,16 @@ const mount = async (app: Application) => {
     app.use(cookieParser(process.env.SECRET));
     app.use(express.json({ limit: '10mb' }));
     app.use(cors({
-      origin: corsOrigin,
       credentials: true,
+      origin: corsOrigin,
     }));
     app.use(helmet());
 
     const server = new ApolloServer({
-      schema,
       plugins: [
         ApolloServerPluginDrainHttpServer({ httpServer }),
       ],
+      schema,
     });
 
     await server.start();

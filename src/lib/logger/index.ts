@@ -30,7 +30,7 @@ const createConsoleLog = ({ message, type }: Props) => {
 };
 
 export const logger = {
+  error: (message: any) => createConsoleLog({ message, type: 'error' }),
   info: (message: any) => createConsoleLog({ message, type: 'info' }),
   warn: (message: any) => createConsoleLog({ message, type: 'warn' }),
-  error: (message: any) => createConsoleLog({ message, type: 'error' }),
 };
