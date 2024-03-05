@@ -14,7 +14,8 @@
     "db:migrate:main:prod": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
     "lint": "eslint",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@apollo/server": "^4.7.4",
