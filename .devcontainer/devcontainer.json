@@ -3,16 +3,8 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "server",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"mongodb.mongodb-vscode"
-			]
-		}
-	},
-	"forwardPorts": [9000, 5432],
-	"postCreateCommand": "yarn install",
-	"mounts": [
-    "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/node/.ssh,readonly"
-  ]
+	"forwardPorts": [
+		9000,
+		5432
+	]
 }

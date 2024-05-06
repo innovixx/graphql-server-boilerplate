@@ -31,7 +31,9 @@ const mount = async (app: Application) => {
       credentials: true,
       origin: corsOrigin,
     }));
-    app.use(helmet());
+    app.use(helmet({
+      contentSecurityPolicy: isDev ? false : undefined,
+    }));
 
     const server = new ApolloServer({
       plugins: [

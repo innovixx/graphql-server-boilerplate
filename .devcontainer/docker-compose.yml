@@ -2,11 +2,13 @@ version: '3.8'
 
 services:
   server:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     volumes:
       - ../..:/workspaces:cached
+      - ~/.ssh:/home/node/.ssh:cached
+      - ~/.npmrc:/home/node/.npmrc:cached
     command: sleep infinity
     working_dir: /workspaces/graphql-server-boilerplate
 
