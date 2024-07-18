@@ -1,5 +1,9 @@
 module.exports = {
-  extends: ['@innovixx/eslint-config/configs/base', '@innovixx/eslint-config/configs/typescript'],
+  extends: [
+    '@innovixx/eslint-config/configs/base',
+    '@innovixx/eslint-config/configs/react',
+    '@innovixx/eslint-config/configs/typescript',
+  ],
   ignorePatterns: ['databases'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
