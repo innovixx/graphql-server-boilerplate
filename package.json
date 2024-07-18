@@ -13,7 +13,7 @@
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
     "lint": "eslint",
-    "lint-staged": "lint-staged",
+    "lint-staged": "lint-staged --verbose",
     "postinstall": "husky install"
   },
   "dependencies": {
@@ -52,8 +52,9 @@
     "typescript": "^5.1.3"
   },
   "lint-staged": {
-    "*.{js,ts}": [
-      "yarn lint"
+    "**/*.{js,ts}": [
+      "yarn lint",
+      "bash -c tsc"
     ]
   }
 }
