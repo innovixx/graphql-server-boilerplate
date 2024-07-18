@@ -12,7 +12,7 @@
     "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
     "lint-staged": "lint-staged --verbose",
     "postinstall": "husky install"
   },
