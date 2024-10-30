@@ -3,6 +3,15 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "server",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"Prisma.prisma",
+				"orsenkucher.vscode-graphql"
+			]
+		}
+	},
 	"forwardPorts": [
 		9000,
 		5432
