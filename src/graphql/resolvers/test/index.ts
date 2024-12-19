@@ -1,5 +1,5 @@
 import { IResolvers } from '@graphql-tools/utils';
-import { maindb } from '../../../prisma';
+import { maindb } from '../../../prisma/index.js';
 
 export const testResolvers: IResolvers = {
   Query: {

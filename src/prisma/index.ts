@@ -1,4 +1,4 @@
-import { PrismaClient as MainDBPrismaClient } from '../../databases/maindb/client';
+import { PrismaClient as MainDBPrismaClient } from '../../databases/maindb/client/index.js';
 
 export const maindb = new MainDBPrismaClient({
   errorFormat: 'minimal',

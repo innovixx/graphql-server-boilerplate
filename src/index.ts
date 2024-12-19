@@ -9,8 +9,8 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServer } from '@apollo/server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import helmet from 'helmet';
-import { logger } from './lib/logger';
-import { typeDefs, resolvers } from './graphql';
+import { logger } from './lib/logger/index.js';
+import { typeDefs, resolvers } from './graphql/index.js';
 
 dotenv({
   path: path.resolve(__dirname, '../.env'),

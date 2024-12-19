@@ -1,5 +1,5 @@
-import { logger } from '../../lib/logger';
-import { maindb } from '../../prisma';
+import { logger } from '../../lib/logger/index.js';
+import { maindb } from '../../prisma/index.js';
 
 export const seedTest = async () => {
   await maindb.test.create({

@@ -4,6 +4,7 @@
   "description": "This GraphQL server boilerplate provides a basic structure for building servers.",
   "repository": "git@github.com:innovixx/graphql-server-boilerplate.git",
   "author": "Innovixx <contact@innovixx.co.uk>",
+  "type": "module",
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
