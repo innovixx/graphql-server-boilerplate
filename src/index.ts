@@ -9,8 +9,12 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServer } from '@apollo/server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import helmet from 'helmet';
+import { fileURLToPath } from 'url';
 import { logger } from './lib/logger/index.js';
 import { typeDefs, resolvers } from './graphql/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv({
   path: path.resolve(__dirname, '../.env'),
