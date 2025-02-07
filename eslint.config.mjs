@@ -23,6 +23,7 @@ export const rootEslintConfig = [
     ignores: [
       ...defaultESLintIgnores,
       'src/graphql/generated/schema.ts',
+      'src/lib/logger/index.ts',
     ],
   },
   {
