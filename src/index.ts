@@ -1,7 +1,8 @@
 import path from 'path';
 import { createServer } from 'http';
 import { config as dotenv } from 'dotenv';
-import express, { Application } from 'express';
+import type { Application } from 'express';
+import express from 'express';
 import cookieParser from 'cookie-parser';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
@@ -9,22 +10,20 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServer } from '@apollo/server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import helmet from 'helmet';
-import { fileURLToPath } from 'url';
+import type { IResolvers } from '@graphql-tools/utils';
+import { resolvers, typeDefs } from './graphql/index.js';
 import { logger } from './lib/logger/index.js';
-import { typeDefs, resolvers } from './graphql/index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv({
-  path: path.resolve(__dirname, '../.env'),
-});
+dotenv();
 
 const isDev = process.env.NODE_ENV === 'development';
 
-const mount = async (app: Application) => {
+const mount = async (app: Application): Promise<void> => {
   try {
-    const schema = makeExecutableSchema({ resolvers, typeDefs });
+    const schema = makeExecutableSchema({
+      resolvers: resolvers as IResolvers,
+      typeDefs,
+    });
 
     const httpServer = createServer(app);
 
@@ -51,16 +50,17 @@ const mount = async (app: Application) => {
     app.use(
       '/api',
       expressMiddleware(server, {
+        // eslint-disable-next-line @typescript-eslint/require-await
         context: async ({ req, res }) => ({ req, res }),
-      }),
+      }) as unknown as express.RequestHandler,
     );
 
     httpServer.listen(process.env.PORT, () => {
       logger.info(`Server is running on port ${process.env.PORT}`);
     });
   } catch (err) {
-    logger.error(err);
+    logger.error(String(err));
   }
 };
 
-mount(express());
+mount(express()).catch((err) => logger.error(String(err)));

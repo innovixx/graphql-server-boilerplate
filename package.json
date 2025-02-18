@@ -13,7 +13,7 @@
     "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
-    "lint": "eslint ./src/**/*.{js,ts,jsx,tsx}",
+    "lint": "eslint ./src/**/*.{js,jsx,ts,tsx}",
     "lint-staged": "lint-staged --verbose",
     "prepare": "husky"
   },
@@ -36,7 +36,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@innovixx/eslint-config": "3.0.1",
+    "@innovixx/eslint-config": "3.0.5",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^5.0.0",

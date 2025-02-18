@@ -1,3 +1,4 @@
+
 import dayjs from 'dayjs';
 
 /* eslint-disable no-console */
@@ -6,7 +7,7 @@ interface Props {
   type: 'info' | 'error' | 'warn';
 }
 
-const createConsoleLog = ({ message, type }: Props) => {
+const createConsoleLog = ({ message, type }: Props): void => {
   const dateFormatted = dayjs().format('DD-MM-YYYY HH:mm:ss');
 
   switch (type) {
@@ -29,7 +30,7 @@ const createConsoleLog = ({ message, type }: Props) => {
 };
 
 export const logger = {
-  error: (message: any) => createConsoleLog({ message, type: 'error' }),
-  info: (message: any) => createConsoleLog({ message, type: 'info' }),
-  warn: (message: any) => createConsoleLog({ message, type: 'warn' }),
+  error: (message: string): void => createConsoleLog({ message, type: 'error' }),
+  info: (message: string): void => createConsoleLog({ message, type: 'info' }),
+  warn: (message: string): void => createConsoleLog({ message, type: 'warn' }),
 };
