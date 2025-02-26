@@ -15,4 +15,9 @@ export default [
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
   },
+  {
+    rules: {
+      'import/extensions': 'off',
+    },
+  },
 ];

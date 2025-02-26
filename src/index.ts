@@ -1,4 +1,3 @@
-import path from 'path';
 import { createServer } from 'http';
 import { config as dotenv } from 'dotenv';
 import type { Application } from 'express';
@@ -50,7 +49,6 @@ const mount = async (app: Application): Promise<void> => {
     app.use(
       '/api',
       expressMiddleware(server, {
-        // eslint-disable-next-line @typescript-eslint/require-await
         context: async ({ req, res }) => ({ req, res }),
       }) as unknown as express.RequestHandler,
     );
