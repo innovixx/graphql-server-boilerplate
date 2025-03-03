@@ -58,8 +58,8 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@innovixx/eslint-config':
-        specifier: ^3.0.7
-        version: 3.0.7
+        specifier: ^3.0.9
+        version: 3.0.9
       '@types/cookie-parser':
         specifier: ^1.4.3
         version: 1.4.8(@types/express@5.0.0)
@@ -460,8 +460,8 @@ packages:
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
 
-  '@innovixx/eslint-config@3.0.7':
-    resolution: {integrity: sha512-zIR/cSKQrjnYO/ESdKpBGjiqR9WF4SWmexcFKcpmJ0xAsDEnYCsA/UHrE4mW6UKL1kLCZG3hd7F0FAnvxi0kog==}
+  '@innovixx/eslint-config@3.0.9':
+    resolution: {integrity: sha512-rt+fEUcqJHHt3T1yWjYPeQoHApbnPDBpCCLFjU7n4XTZ1jd4lckzOtWlf3CJCgoDsjpQMefisx/5Lq2mpjBd+Q==}
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -2908,7 +2908,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.1': {}
 
-  '@innovixx/eslint-config@3.0.7':
+  '@innovixx/eslint-config@3.0.9':
     dependencies:
       '@eslint-react/eslint-plugin': 1.16.1(eslint@9.19.0)(typescript@5.7.3)
       '@eslint/js': 9.19.0
