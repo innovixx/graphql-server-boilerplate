@@ -7,7 +7,7 @@ This GraphQL server boilerplate provides a basic structure for building servers.
 1. Clone the repository: 
 
    ```bash
-   git clone git@github.com:Innovixx-Development/graphql-server-boilerplate.git
+   git clone git@github.com:Innovixx/graphql-server-boilerplate.git
    ```
 
 2. Install the dependencies: 
