@@ -10,18 +10,22 @@
     "build": "tsc",
     "serve": "node ./dist/index.js",
     "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
+    "codegen": "graphql-codegen --config codegen.ts",
     "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
-    "lint": "eslint ./src/**/*.{js,jsx,ts,tsx}",
+    "lint": "eslint ./src/**/*.{graphql,js,jsx,ts,tsx}",
     "lint-staged": "lint-staged --verbose",
     "prepare": "husky"
   },
   "dependencies": {
     "@apollo/server": "^4.7.4",
+    "@graphql-tools/load-files": "^7.0.1",
+    "@graphql-tools/merge": "^9.1.1",
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/utils": "^10.0.1",
     "@prisma/client": "^6.13.0",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dayjs": "^1.11.8",
@@ -36,7 +40,11 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-eslint/eslint-plugin": "^4.4.0",
     "@innovixx/eslint-config": "^3.0.10",
+    "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^5.0.0",
@@ -53,6 +61,9 @@
     "typescript": "^5.7.3"
   },
   "lint-staged": {
+    "**/*.graphql": [
+      "eslint --fix"
+    ],
     "**/*.{js,ts,jsx,tsx}": [
       "eslint --quiet",
       "bash -c tsc"

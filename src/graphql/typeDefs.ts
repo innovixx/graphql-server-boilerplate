@@ -1,9 +1,20 @@
-import { gql } from 'graphql-tag';
-import { testTypeDefs } from './typeDefParts/index.js';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import { loadFilesSync } from '@graphql-tools/load-files';
+import { mergeTypeDefs } from '@graphql-tools/merge';
+import fs from 'fs';
+import { print } from 'graphql';
 
-export const typeDefs = gql`
-  scalar Date
-  scalar JSON
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  ${testTypeDefs}
-`;
+const typesArray = loadFilesSync(path.join(__dirname, './typeDefs/**/*.graphql'));
+
+const mergedTypeDefs = mergeTypeDefs(typesArray);
+const sdl = print(mergedTypeDefs);
+
+const outputPath = path.join(__dirname, 'schema.graphql');
+fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+fs.writeFileSync(outputPath, sdl);
+
+export const typeDefs = mergedTypeDefs;

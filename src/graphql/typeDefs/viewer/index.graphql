@@ -1,0 +1,24 @@
+enum UserRole {
+	ADMIN
+	USER
+}
+
+type Viewer {
+	id: ID
+	firstName: String
+	lastName: String
+	email: String
+	token: String
+	role: UserRole
+	redirectTo: String
+	didRequest: Boolean!
+}
+
+type Query {
+	viewer: Viewer!
+}
+
+type Mutation {
+	login(email: String, password: String, redirectTo: String): Viewer!
+	logout: Boolean!
+}
