@@ -14,38 +14,7 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Mutation = {
-  __typename?: 'Mutation';
-  login: Viewer;
-  logout: Scalars['Boolean']['output'];
-};
-
-
-export type MutationLoginArgs = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  redirectTo?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   test?: Maybe<Scalars['String']['output']>;
-  viewer: Viewer;
-};
-
-export enum UserRole {
-  Admin = 'ADMIN',
-  User = 'USER'
-}
-
-export type Viewer = {
-  __typename?: 'Viewer';
-  didRequest: Scalars['Boolean']['output'];
-  email?: Maybe<Scalars['String']['output']>;
-  firstName?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  lastName?: Maybe<Scalars['String']['output']>;
-  redirectTo?: Maybe<Scalars['String']['output']>;
-  role?: Maybe<UserRole>;
-  token?: Maybe<Scalars['String']['output']>;
 };

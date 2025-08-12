@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import baseConfig from '@innovixx/eslint-config/config/configs/base/index.mjs';
 import reactConfig from '@innovixx/eslint-config/config/configs/react/index.mjs';
 import typescriptConfig from '@innovixx/eslint-config/config/configs/typescript/index.mjs';
@@ -7,10 +6,7 @@ import graphqlPlugin from '@graphql-eslint/eslint-plugin';
 export default [
 	baseConfig,
 	reactConfig,
-	{
-		...typescriptConfig,
-		files: ['**/*.{ts,tsx}'],
-	},
+	typescriptConfig,
 	{
 		ignores: [
 			'databases',
