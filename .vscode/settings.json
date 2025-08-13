@@ -2,10 +2,4 @@
   "cSpell.words": [
     "maindb"
   ],
-  "eslint.useFlatConfig": true,
-  "eslint.validate": [
-    "javascript",
-    "typescript",
-    "graphql"
-  ]
 }
