@@ -17,3 +17,46 @@ model Test {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+enum UserStatus {
+  AWAITING_VERIFICATION
+  ACTIVE
+  INACTIVE
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id                       String     @id @default(cuid())
+  firstName                String
+  lastName                 String
+  email                    String
+  phoneNumber              String?
+  password                 String?
+  status                   UserStatus @default(AWAITING_VERIFICATION)
+  role                     UserRole   @default(USER)
+  failedLoginAttempts      Int        @default(0)
+  lastLoginAttempt         DateTime?
+  resetPasswordToken       String?
+  resetPasswordTokenExpiry String?
+  inviteToken              String?
+  inviteTokenExpiry        DateTime?
+  createdAt                DateTime   @default(now())
+  updatedAt                DateTime   @updatedAt
+  session                  Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

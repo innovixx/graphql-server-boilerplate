@@ -1,5 +1,9 @@
 onlyBuiltDependencies:
+  - '@apollo/protobufjs'
+  - '@parcel/watcher'
   - '@prisma/client'
   - '@prisma/engines'
+  - bcrypt
+  - esbuild
   - prisma
   - unrs-resolver
