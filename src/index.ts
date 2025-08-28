@@ -58,9 +58,6 @@ const mount = async (app: Application): Promise<void> => {
 			}) as unknown as express.RequestHandler,
 		);
 
-
-		console.log(process.env.NODE_ENV);
-
 		if (process.env.NODE_ENV !== 'production') {
 			app.use('/api/docs', swaggerRouter);
 		}

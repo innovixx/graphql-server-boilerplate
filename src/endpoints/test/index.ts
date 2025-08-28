@@ -1,18 +1,20 @@
 import { Router } from 'express';
 import type { IResolvers } from '@graphql-tools/utils';
-import { restGetHandler } from '../../utils/restGetHandler/index.js';
+import { restGetHandler } from '../../utils/methodHandlers/restGetHandler/index.js';
 import { getTests } from './getTests/index.js';
-import { graphqlGetHandler } from '../../utils/graphqlGetHandler/index.js';
-import { restPostHandler } from '../../utils/restPostHandler/index.js';
+import { restPostHandler } from '../../utils/methodHandlers/restPostHandler/index.js';
 import { createTest } from './createTest/index.js';
-import { graphqlPostHandler } from '../../utils/graphqlPostHandler/index.js';
+import { graphqlPostHandler } from '../../utils/methodHandlers/graphqlPostHandler/index.js';
+import { graphqlGetHandler } from '../../utils/methodHandlers/graphqlGetHandler/index.js';
+import { updateTest } from './updateTest/index.js';
 
 
 export const testsRouter = (): Router => {
 	const router = Router();
 
-	router.get('/', restGetHandler(getTests));
-	router.post('/', restPostHandler(createTest));
+	router.get('/get-tests', restGetHandler(getTests));
+	router.post('/create-test', restPostHandler(createTest));
+	router.put('/update-test', restPostHandler(updateTest));
 
 	return router;
 };
@@ -23,5 +25,6 @@ export const testResolvers: IResolvers = {
 	},
 	Mutation: {
 		createTest: graphqlPostHandler(createTest),
+		updateTest: graphqlPostHandler(updateTest),
 	},
 };

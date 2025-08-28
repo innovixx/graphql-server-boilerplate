@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const endpointsDir = path.join(__dirname, '../endpoints');
+const testEndpointsDir = path.join(endpointsDir, 'test');
 type OpenApiType = {
 	openapi: string;
 	info: Record<string, unknown>;
@@ -27,14 +28,17 @@ const openApi: OpenApiType = {
 	components: {},
 };
 
-function findEndpointFiles(dir: string): string[] {
+function findEndpointFiles(dir: string, excludeDir?: string): string[] {
 	let results: string[] = [];
 	const list = fs.readdirSync(dir);
 	list.forEach((file) => {
 		const filePath = path.join(dir, file);
+		if (excludeDir && filePath.startsWith(excludeDir)) {
+			return;
+		}
 		const stat = fs.statSync(filePath);
 		if (stat && stat.isDirectory()) {
-			results = results.concat(findEndpointFiles(filePath));
+			results = results.concat(findEndpointFiles(filePath, excludeDir));
 		} else if (file === 'index.ts') {
 			results.push(filePath);
 		}
@@ -43,7 +47,12 @@ function findEndpointFiles(dir: string): string[] {
 }
 
 async function main(): Promise<void> {
-	const endpointFiles = findEndpointFiles(endpointsDir);
+	let endpointFiles: string[];
+	if (process.env.NODE_ENV === 'production') {
+		endpointFiles = findEndpointFiles(endpointsDir, testEndpointsDir);
+	} else {
+		endpointFiles = findEndpointFiles(endpointsDir);
+	}
 	await Promise.all(
 		endpointFiles.map(async (file) => {
 			const mod = await import(file);

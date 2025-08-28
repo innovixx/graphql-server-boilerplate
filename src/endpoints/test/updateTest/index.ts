@@ -2,13 +2,16 @@ import type { Test } from '../../../../databases/maindb/client/index.js';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { TestResultSchema } from '../../../prisma/maindb/types/schemas/variants/result/Test.result.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import { CreateTestInputSchema, type CreateTestInput } from './types.js';
+import { UpdateTestInputSchema, type UpdateTestInput } from './types.js';
 
-type Props = CreateTestInput
+type Props = UpdateTestInput
 
 
-export const createTest = async ({ input }: Props): Promise<Test> => {
-	const item = await maindb.test.create({
+export const updateTest = async ({ id, input }: Props): Promise<Test> => {
+	const item = await maindb.test.update({
+		where: {
+			id,
+		},
 		data: {
 			text: input.text,
 		},
@@ -18,9 +21,9 @@ export const createTest = async ({ input }: Props): Promise<Test> => {
 };
 
 export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests/create-test',
-	method: 'post',
-	summary: 'Create a new test',
-	bodyZod: CreateTestInputSchema,
+	path: '/tests/update-test',
+	method: 'put',
+	summary: 'Update a test',
+	bodyZod: UpdateTestInputSchema,
 	responseZod: TestResultSchema,
 });

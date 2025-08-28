@@ -23,10 +23,17 @@ export type CreateTestInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createTest: Test;
+  updateTest: Test;
 };
 
 
 export type MutationCreateTestArgs = {
+  input?: InputMaybe<CreateTestInput>;
+};
+
+
+export type MutationUpdateTestArgs = {
+  id: Scalars['String']['input'];
   input?: InputMaybe<CreateTestInput>;
 };
 

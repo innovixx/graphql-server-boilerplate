@@ -1,6 +1,6 @@
-import type { Test } from '../../../databases/maindb/client/index.js';
-import type { PaginatedDocs, QueryParams } from '../../lib/types.js';
-import { covertGraphqlWhereToRestWhere } from '../covertGraphqlWhereToRestWhere/index.js';
+import type { Test } from '../../../graphql/generated/schema.js';
+import type { PaginatedDocs, QueryParams } from '../../../lib/types.js';
+import { covertGraphqlWhereToRestWhere } from '../../covertGraphqlWhereToRestWhere/index.js';
 
 export const graphqlGetHandler = (
 	getFn: (params: QueryParams) => Promise<PaginatedDocs<Test>>,

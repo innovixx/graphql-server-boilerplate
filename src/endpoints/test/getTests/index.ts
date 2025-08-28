@@ -34,7 +34,7 @@ export const getTests = async ({
 };
 
 export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests',
+	path: '/tests/get-test',
 	method: 'get',
 	summary: 'Get tests',
 	queryZod: QueryParamsSchema,

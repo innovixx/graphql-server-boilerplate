@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/tests": {
+    "/tests/create-test": {
       "post": {
         "summary": "Create a new test",
         "requestBody": {
@@ -20,12 +20,20 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "text": {
-                    "type": "string"
+                  "input": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ]
                   }
                 },
                 "required": [
-                  "text"
+                  "input"
                 ]
               }
             }
@@ -64,7 +72,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/tests/get-test": {
       "get": {
         "summary": "Get tests",
         "parameters": [
@@ -151,6 +161,73 @@
                   "required": [
                     "total",
                     "items"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tests/update-test": {
+      "put": {
+        "summary": "Update a test",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "properties": {
+                      "text": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "input"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "text",
+                    "createdAt",
+                    "updatedAt"
                   ],
                   "additionalProperties": false
                 }

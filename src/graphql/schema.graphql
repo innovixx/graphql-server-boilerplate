@@ -15,6 +15,7 @@ type Query {
 
 type Mutation {
   createTest(input: CreateTestInput): Test!
+  updateTest(id: String!, input: CreateTestInput): Test!
 }
 
 type Test {
