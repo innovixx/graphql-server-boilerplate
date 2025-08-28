@@ -1,0 +1,13 @@
+export { TestFindUniqueResultSchema } from './TestFindUniqueResult.schema';
+export { TestFindFirstResultSchema } from './TestFindFirstResult.schema';
+export { TestFindManyResultSchema } from './TestFindManyResult.schema';
+export { TestCreateResultSchema } from './TestCreateResult.schema';
+export { TestCreateManyResultSchema } from './TestCreateManyResult.schema';
+export { TestUpdateResultSchema } from './TestUpdateResult.schema';
+export { TestUpdateManyResultSchema } from './TestUpdateManyResult.schema';
+export { TestUpsertResultSchema } from './TestUpsertResult.schema';
+export { TestDeleteResultSchema } from './TestDeleteResult.schema';
+export { TestDeleteManyResultSchema } from './TestDeleteManyResult.schema';
+export { TestAggregateResultSchema } from './TestAggregateResult.schema';
+export { TestGroupByResultSchema } from './TestGroupByResult.schema';
+export { TestCountResultSchema } from './TestCountResult.schema';

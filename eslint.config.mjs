@@ -14,6 +14,7 @@ export default [
 			'schema.graphql',
 			'src/graphql/generated',
 			'codegen.ts',
+			'src/prisma/maindb/types',
 		],
 	},
 	{

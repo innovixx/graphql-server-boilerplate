@@ -160,8 +160,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"MAIN_DATABASE_URL\")\n}\n\nmodel Test {\n  id        String   @id @default(cuid())\n  text      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "5dbe515206002fe2d17ffc33873f7ca15941902e53b432a01b38b049195b3cd8",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ngenerator zod {\n  provider = \"prisma-zod-generator\"\n  output   = \"../../src/prisma/maindb/types\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"MAIN_DATABASE_URL\")\n}\n\nmodel Test {\n  id        String   @id @default(cuid())\n  text      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "e3d4dfd30accd2942529c6587a1e24ab751c01bc8b59035032bef0e15c35b8c9",
   "copyEngine": true
 }
 config.dirname = '/'

@@ -20,7 +20,13 @@ export const parseQueryParams = (query: ReqQuery): QueryParams => {
 				}
 			}
 		};
-		transformSelect(parsedQuery.select);
+		if (
+			typeof parsedQuery.select === 'object'
+			&& parsedQuery.select !== null
+			&& !Array.isArray(parsedQuery.select)
+		) {
+			transformSelect(parsedQuery.select as Record<string, unknown>);
+		}
 	}
 
 	return parsedQuery;

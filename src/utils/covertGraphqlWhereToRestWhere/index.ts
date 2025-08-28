@@ -17,9 +17,9 @@ export const covertGraphqlWhereToRestWhere = (where: any): Where => {
 	// eslint-disable-next-line no-restricted-syntax
 	for (const key in where) {
 		if (key === 'and' || key === 'or') {
-			result[key] = where[key].map((subWhere: any) => covertGraphqlWhereToRestWhere(subWhere));
+			(result as any)[key] = where[key].map((subWhere: any) => covertGraphqlWhereToRestWhere(subWhere));
 		} else if (key === 'field') {
-			result[where[key]] = convertWhereField(where.value);
+			(result as any)[where[key]] = convertWhereField(where.value);
 		}
 	}
 	return result;
