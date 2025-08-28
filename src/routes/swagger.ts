@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import fs from 'fs';
 import path from 'path';
 import type { Response, Request } from 'express';
@@ -9,15 +10,15 @@ const swaggerRouter = Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-swaggerRouter.get('/swagger', (_: Request, res: Response) => {
-	const openapiPath = path.resolve(__dirname, '../openapi.json');
-	fs.readFile(openapiPath, 'utf8', (err, data) => {
-		if (err) {
-			res.status(500).send('Unable to load OpenAPI spec.');
-			return;
-		}
-		const openapiJson = data.replace(/<\/?script>/g, (match) => match.replace('<', '<'));
-		res.type('html').send(`
+swaggerRouter.get('/', (_: Request, res: Response) => {
+  const openapiPath = path.resolve(__dirname, '../openapi.json');
+  fs.readFile(openapiPath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Unable to load OpenAPI spec.');
+      return;
+    }
+    const openapiJson = data.replace(/<\/?script>/g, (match) => match.replace('<', '<'));
+    res.type('html').send(`
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -44,7 +45,7 @@ swaggerRouter.get('/swagger', (_: Request, res: Response) => {
       </body>
       </html>
     `);
-	});
+  });
 });
 
 export default swaggerRouter;

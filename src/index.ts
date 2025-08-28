@@ -58,7 +58,10 @@ const mount = async (app: Application): Promise<void> => {
 
 
 		app.use('/api/rest', endpointsRouter());
-		app.use('/api', swaggerRouter);
+
+		if (process.env.NODE_ENV !== 'production') {
+			app.use('/api/docs', swaggerRouter);
+		}
 
 		httpServer.listen(process.env.PORT, () => {
 			logger.info(`Server is running on port ${process.env.PORT}`);
