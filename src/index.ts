@@ -14,6 +14,7 @@ import { logger } from './lib/logger/index.js';
 import { resolvers } from './graphql/resolvers.js';
 import { typeDefs } from './graphql/typeDefs.js';
 import { endpointsRouter } from './endpoints/index.js';
+import swaggerRouter from './routes/swagger.js';
 
 dotenv();
 
@@ -55,7 +56,9 @@ const mount = async (app: Application): Promise<void> => {
 			}) as unknown as express.RequestHandler,
 		);
 
+
 		app.use('/api/rest', endpointsRouter());
+		app.use('/api', swaggerRouter);
 
 		httpServer.listen(process.env.PORT, () => {
 			logger.info(`Server is running on port ${process.env.PORT}`);
