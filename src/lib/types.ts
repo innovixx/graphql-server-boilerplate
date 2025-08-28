@@ -1,3 +1,4 @@
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 export const validOperators = [
@@ -63,3 +64,9 @@ export type PaginatedDocs<T> = {
 	total: number;
 	items: T[];
 };
+
+export type EndpointHandler<T, R> = (
+	data: T,
+	req: Request,
+	res: Response
+) => Promise<R> | void;

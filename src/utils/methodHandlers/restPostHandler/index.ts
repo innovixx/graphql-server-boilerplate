@@ -1,13 +1,12 @@
-/* eslint-disable indent */
 
 import type { NextFunction, Request, Response } from 'express';
+import type { EndpointHandler } from '../../../lib/types.js';
 
-export const restPostHandler = <R>(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	postFn: (data: any) => Promise<R>,
+export const restPostHandler = (
+	postFn: EndpointHandler<any, any>,
 ) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		const result = await postFn(req.body);
+		const result = await postFn(req.body, req, res);
 		res.status(200).json(result);
 	} catch (error) {
 		next(error);

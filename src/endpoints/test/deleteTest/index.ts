@@ -1,3 +1,4 @@
+import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { TestResultSchema } from '../../../prisma/maindb/types/schemas/variants/result/Test.result.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
@@ -6,7 +7,7 @@ import { DeleteTestInputSchema, type DeleteTestInput } from './types.js';
 type Props = DeleteTestInput
 
 
-export const deleteTest = async ({ id }: Props): Promise<Boolean> => {
+export const deleteTest: EndpointHandler<Props, Boolean> = async ({ id }: Props) => {
 	await maindb.test.delete({
 		where: {
 			id,

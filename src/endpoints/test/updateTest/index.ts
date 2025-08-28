@@ -1,4 +1,5 @@
 import type { Test } from '../../../../databases/maindb/client/index.js';
+import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { TestResultSchema } from '../../../prisma/maindb/types/schemas/variants/result/Test.result.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
@@ -7,7 +8,7 @@ import { UpdateTestInputSchema, type UpdateTestInput } from './types.js';
 type Props = UpdateTestInput
 
 
-export const updateTest = async ({ id, input }: Props): Promise<Test> => {
+export const updateTest: EndpointHandler<Props, Test> = async ({ id, input }) => {
 	const item = await maindb.test.update({
 		where: {
 			id,
