@@ -11,6 +11,7 @@ input CreateTestInput {
 
 type Query {
   tests(limit: Int, offset: Int, where: Where, sortBy: String): PaginatedTests!
+  test(id: String!): Test!
 }
 
 type Mutation {

@@ -5,8 +5,12 @@ import { parseQueryParams } from '../../parseQueryString/index.js';
 export const restGetHandler = (
 	getFn: EndpointHandler<any, any>,
 ) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-	const params = parseQueryParams(req.query);
-	const records = await getFn(params, req, res);
-	res.status(200).json(records);
-	next();
+	try {
+		const params = parseQueryParams(req.query);
+		const records = await getFn(params, req, res);
+		res.status(200).json(records);
+		next();
+	} catch (error) {
+		next(error);
+	}
 };

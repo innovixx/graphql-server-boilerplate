@@ -8,12 +8,14 @@ import { graphqlPostHandler } from '../../utils/methodHandlers/graphqlPostHandle
 import { graphqlGetHandler } from '../../utils/methodHandlers/graphqlGetHandler/index.js';
 import { updateTest } from './updateTest/index.js';
 import { deleteTest } from './deleteTest/index.js';
+import { getTest } from './getTest/index.js';
 
 
 export const testsRouter = (): Router => {
 	const router = Router();
 
 	router.get('/get-tests', restGetHandler(getTests));
+	router.get('/get-test', restGetHandler(getTest));
 	router.post('/create-test', restPostHandler(createTest));
 	router.put('/update-test', restPostHandler(updateTest));
 	router.delete('/delete-test', restPostHandler(deleteTest));
@@ -24,6 +26,7 @@ export const testsRouter = (): Router => {
 export const testResolvers: IResolvers = {
 	Query: {
 		tests: graphqlGetHandler(getTests),
+		test: graphqlGetHandler(getTest),
 	},
 	Mutation: {
 		createTest: graphqlPostHandler(createTest),

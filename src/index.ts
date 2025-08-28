@@ -58,8 +58,6 @@ const mount = async (app: Application): Promise<void> => {
 			}) as unknown as express.RequestHandler,
 		);
 
-		app.use('/api/docs', swaggerRouter);
-
 		httpServer.listen(process.env.PORT, () => {
 			logger.info(`Server is running on port ${process.env.PORT}`);
 		});

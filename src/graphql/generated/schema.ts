@@ -55,7 +55,13 @@ export type PaginatedTests = PaginatedDocs & {
 
 export type Query = {
   __typename?: 'Query';
+  test: Test;
   tests: PaginatedTests;
+};
+
+
+export type QueryTestArgs = {
+  id: Scalars['String']['input'];
 };
 
 

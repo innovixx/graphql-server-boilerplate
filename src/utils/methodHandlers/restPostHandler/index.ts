@@ -1,4 +1,3 @@
-
 import type { NextFunction, Request, Response } from 'express';
 import type { EndpointHandler } from '../../../lib/types.js';
 
