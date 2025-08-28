@@ -23,7 +23,7 @@ export const getTests: EndpointHandler<Props, PaginatedDocs<Test>> = async ({
 	const items = await maindb.test.findMany({
 		...(where ? { where } : {}),
 		skip: offset,
-		take: Math.min(DB_RECORDS_MAX_LIMIT, limit || DB_RECORDS_DEFAULT_LIMIT),
+		take: Math.min(limit || DB_RECORDS_DEFAULT_LIMIT, DB_RECORDS_MAX_LIMIT),
 		orderBy: convertQuerySortToPrismaOrderBy(sortBy),
 		...(select ? { select } : {}),
 	});
