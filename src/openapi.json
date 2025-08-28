@@ -11,10 +11,9 @@
     }
   ],
   "paths": {
-    "/test": {
+    "/tests": {
       "post": {
         "summary": "Create a new test",
-        "querySchema": {},
         "requestBody": {
           "content": {
             "application/json": {
@@ -68,33 +67,48 @@
       },
       "get": {
         "summary": "Get tests",
-        "querySchema": {},
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "limit": {
-                    "type": "number"
-                  },
-                  "offset": {
-                    "type": "number"
-                  },
-                  "sortBy": {
-                    "type": "string"
-                  },
-                  "where": {
-                    "$ref": "#/components/schemas/__schema0"
-                  },
-                  "select": {
-                    "$ref": "#/components/schemas/__schema2"
-                  }
-                }
-              }
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "where",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/__schema0"
+            }
+          },
+          {
+            "name": "select",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/__schema2"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Successful response",

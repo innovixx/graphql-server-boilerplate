@@ -10,3 +10,7 @@ input CreateTestInput {
 type Query {
 	tests(limit: Int, offset: Int, where: Where, sortBy: String): PaginatedTests!
 }
+
+type Mutation {
+	createTest(input: CreateTestInput): Test!
+}

@@ -13,6 +13,10 @@ type Query {
   tests(limit: Int, offset: Int, where: Where, sortBy: String): PaginatedTests!
 }
 
+type Mutation {
+  createTest(input: CreateTestInput): Test!
+}
+
 type Test {
   id: String!
   text: String!
@@ -49,4 +53,5 @@ input Where {
 
 schema {
   query: Query
+  mutation: Mutation
 }

@@ -1,4 +1,3 @@
-
 import { createSchema } from 'zod-openapi';
 import type { ZodType } from 'zod';
 
@@ -20,9 +19,27 @@ export function buildOpenApiPath({
 	bodyZod,
 	responseZod,
 }: OpenApiSchemaProps): Record<string, unknown> {
-	const querySchema = queryZod ? createSchema(queryZod, { io: 'input', schemaComponents: {} }).schema : {};
-	const bodySchema = bodyZod ? createSchema(bodyZod, { io: 'input', schemaComponents: {} }).schema : {};
-	const responseSchema = responseZod ? createSchema(responseZod, { io: 'output', schemaComponents: {} }).schema : {};
+	let parameters: Array<Record<string, unknown>> = [];
+	if (queryZod) {
+		const queryOpenApi = queryZod ? createSchema(queryZod, { io: 'input', schemaComponents: {} }).schema : undefined;
+		if (
+			typeof queryOpenApi === 'object'
+			&& queryOpenApi !== null
+			&& 'type' in queryOpenApi
+			&& queryOpenApi.type === 'object'
+			&& 'properties' in queryOpenApi
+		) {
+			const required = Array.isArray(queryOpenApi.required) ? queryOpenApi.required : [];
+			parameters = Object.entries(queryOpenApi.properties as Record<string, unknown>).map(([name, schema]) => ({
+				name,
+				in: 'query',
+				required: required.includes(name),
+				schema,
+			}));
+		}
+	}
+	const bodySchema = bodyZod ? createSchema(bodyZod, { io: 'input', schemaComponents: {} }).schema : undefined;
+	const responseSchema = responseZod ? createSchema(responseZod, { io: 'output', schemaComponents: {} }).schema : undefined;
 	const requestBody = bodySchema
 		? {
 			content: {
@@ -48,7 +65,7 @@ export function buildOpenApiPath({
 		[path]: {
 			[method]: {
 				summary,
-				...(querySchema ? { querySchema } : {}),
+				...(parameters.length ? { parameters } : {}),
 				...(requestBody ? { requestBody } : {}),
 				responses: openApiResponses,
 			},

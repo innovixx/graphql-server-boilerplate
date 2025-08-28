@@ -1,8 +1,9 @@
+/* eslint-disable indent */
 
 import type { NextFunction, Request, Response } from 'express';
 
-export const restPostHandler = (
-	postFn: (data: any) => Promise<any>,
+export const restPostHandler = <T, R>(
+	postFn: (data: T) => Promise<R>,
 ) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		const result = await postFn(req.body);

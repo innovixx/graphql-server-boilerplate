@@ -39,7 +39,6 @@ swaggerRouter.get('/', (_: Request, res: Response) => {
             window.ui = SwaggerUIBundle({
               spec: spec,
               dom_id: '#swagger-ui',
-              supportedSubmitMethods: [],
             });
           };
         </script>

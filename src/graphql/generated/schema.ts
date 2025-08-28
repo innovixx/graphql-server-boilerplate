@@ -20,6 +20,16 @@ export type CreateTestInput = {
   text: Scalars['String']['input'];
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createTest: Test;
+};
+
+
+export type MutationCreateTestArgs = {
+  input?: InputMaybe<CreateTestInput>;
+};
+
 export type PaginatedDocs = {
   total: Scalars['Int']['output'];
 };

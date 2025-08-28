@@ -22,7 +22,7 @@ export const createTest = async ({
 };
 
 export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/test',
+	path: '/tests',
 	method: 'post',
 	summary: 'Create a new test',
 	bodyZod: CreateTestInputSchema,
