@@ -7,6 +7,7 @@ import { createTest } from './createTest/index.js';
 import { graphqlPostHandler } from '../../utils/methodHandlers/graphqlPostHandler/index.js';
 import { graphqlGetHandler } from '../../utils/methodHandlers/graphqlGetHandler/index.js';
 import { updateTest } from './updateTest/index.js';
+import { deleteTest } from './deleteTest/index.js';
 
 
 export const testsRouter = (): Router => {
@@ -15,6 +16,7 @@ export const testsRouter = (): Router => {
 	router.get('/get-tests', restGetHandler(getTests));
 	router.post('/create-test', restPostHandler(createTest));
 	router.put('/update-test', restPostHandler(updateTest));
+	router.delete('/delete-test', restPostHandler(deleteTest));
 
 	return router;
 };
@@ -26,5 +28,6 @@ export const testResolvers: IResolvers = {
 	Mutation: {
 		createTest: graphqlPostHandler(createTest),
 		updateTest: graphqlPostHandler(updateTest),
+		deleteTest: graphqlPostHandler(deleteTest),
 	},
 };

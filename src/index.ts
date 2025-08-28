@@ -49,7 +49,7 @@ const mount = async (app: Application): Promise<void> => {
 
 		await server.start();
 
-		app.use('/api', endpointsRouter());
+		app.use('/api-rest-endpoint', endpointsRouter());
 
 		app.use(
 			'/api/graphql',

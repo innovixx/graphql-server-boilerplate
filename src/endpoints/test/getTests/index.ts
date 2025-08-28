@@ -1,3 +1,4 @@
+import type { Request } from 'express';
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import { PaginatedDocsSchema, QueryParamsSchema, type PaginatedDocs, type QueryParams } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
@@ -34,7 +35,7 @@ export const getTests = async ({
 };
 
 export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests/get-test',
+	path: '/tests/get-tests',
 	method: 'get',
 	summary: 'Get tests',
 	queryZod: QueryParamsSchema,

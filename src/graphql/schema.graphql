@@ -16,6 +16,7 @@ type Query {
 type Mutation {
   createTest(input: CreateTestInput): Test!
   updateTest(id: String!, input: CreateTestInput): Test!
+  deleteTest(id: String!): Boolean!
 }
 
 type Test {

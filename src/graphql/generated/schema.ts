@@ -23,12 +23,18 @@ export type CreateTestInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createTest: Test;
+  deleteTest: Scalars['Boolean']['output'];
   updateTest: Test;
 };
 
 
 export type MutationCreateTestArgs = {
   input?: InputMaybe<CreateTestInput>;
+};
+
+
+export type MutationDeleteTestArgs = {
+  id: Scalars['String']['input'];
 };
 
 
