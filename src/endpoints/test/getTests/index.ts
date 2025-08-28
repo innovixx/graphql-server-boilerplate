@@ -1,6 +1,6 @@
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { DB_RECORDS_LIMIT } from '../../../lib/constants.js';
+import { DB_RECORDS_DEFAULT_LIMIT, DB_RECORDS_MAX_LIMIT } from '../../../lib/constants.js';
 import { convertQuerySortToPrismaOrderBy } from '../../../utils/convertQuerySortToPrismaOrderBy/index.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
 import { TestResultSchema } from '../../../prisma/maindb/types/schemas/variants/result/Test.result.js';
@@ -23,7 +23,7 @@ export const getTests: EndpointHandler<Props, PaginatedDocs<Test>> = async ({
 	const items = await maindb.test.findMany({
 		...(where ? { where } : {}),
 		skip: offset,
-		take: limit || DB_RECORDS_LIMIT,
+		take: Math.min(DB_RECORDS_MAX_LIMIT, limit || DB_RECORDS_DEFAULT_LIMIT),
 		orderBy: convertQuerySortToPrismaOrderBy(sortBy),
 		...(select ? { select } : {}),
 	});
