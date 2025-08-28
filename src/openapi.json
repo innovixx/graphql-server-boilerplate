@@ -11,53 +11,17 @@
     }
   ],
   "paths": {
-    "/tests": {
-      "get": {
-        "summary": "/tests",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false
-          },
-          {
-            "name": "where",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "description": "A JSON string representing filter conditions. Supports logical operators (and, or) and field operators (equals, contains, not_equals, in, not_in, exists, greater_than, greater_than_equal, less_than, less_than_equal). Example: { \"name\": { \"contains\": \"foo\" }, \"and\": [{ \"active\": { \"equals\": true } }] }"
-          },
-          {
-            "name": "select",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "required": false,
-            "description": "A JSON string specifying which fields to include in the result. Use field names as keys and true as values for inclusion. Supports nested selection. Example: { \"id\": true, \"name\": true, \"profile\": { \"email\": true } }"
+    "/test": {
+      "post": {
+        "summary": "Create a new test",
+        "responses": {
+          "200": {
+            "description": "Success"
           }
-        ],
+        }
+      },
+      "get": {
+        "summary": "Get tests",
         "responses": {
           "200": {
             "description": "Success"
@@ -66,7 +30,5 @@
       }
     }
   },
-  "components": {
-    "schemas": {}
-  }
+  "components": {}
 }

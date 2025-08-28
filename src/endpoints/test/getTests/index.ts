@@ -3,8 +3,10 @@ import type { PaginatedDocs, QueryParams } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/index.js';
 import { DB_RECORDS_LIMIT } from '../../../lib/constants.js';
 import { convertQuerySortToPrismaOrderBy } from '../../../utils/convertQuerySortToPrismaOrderBy/index.js';
+import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
 
 type Props = QueryParams
+
 
 export const getTests = async ({
 	limit,
@@ -30,3 +32,14 @@ export const getTests = async ({
 		total,
 	};
 };
+
+export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
+	path: '/test',
+	method: 'get',
+	summary: 'Get tests',
+	responses: {
+		200: {
+			description: 'Success',
+		},
+	},
+});

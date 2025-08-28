@@ -1,24 +1,23 @@
-import type { Handler } from 'express';
+import { Router } from 'express';
 import type { IResolvers } from '@graphql-tools/utils';
-import { createGetRestHandler } from '../../utils/createGetRestHandler/index.js';
+import { restGetHandler } from '../../utils/restGetHandler/index.js';
 import { getTests } from './getTests/index.js';
-import { createGetGraphqlResolver } from '../../utils/createGetGraphqlResolver/index.js';
+import { graphqlGetHandler } from '../../utils/graphqlGetHandler/index.js';
+import { restPostHandler } from '../../utils/restPostHandler/index.js';
+import { createTest } from './createTest/index.js';
 
-export const testEndpoints = (): Handler => (req, res, next) => {
-	switch (req.method) {
-		case 'GET': {
-			createGetRestHandler(getTests)(req, res, next);
-			break;
-		}
-		default: {
-			res.status(405).send('Method Not Allowed');
-			break;
-		}
-	}
+
+export const testsRouter = (): Router => {
+	const router = Router();
+
+	router.get('/', restGetHandler(getTests));
+	router.post('/', restPostHandler(createTest));
+
+	return router;
 };
 
 export const testResolvers: IResolvers = {
 	Query: {
-		tests: createGetGraphqlResolver(getTests),
+		tests: graphqlGetHandler(getTests),
 	},
 };

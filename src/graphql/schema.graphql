@@ -5,6 +5,10 @@ type PaginatedTests implements PaginatedDocs {
   items: [Test!]
 }
 
+input CreateTestInput {
+  text: String!
+}
+
 type Query {
   tests(limit: Int, offset: Int, where: Where, sortBy: String): PaginatedTests!
 }

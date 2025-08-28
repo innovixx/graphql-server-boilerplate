@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm codegen --watch & nodemon --exec tsx src/index.ts",
-    "build": "pnpm generate:openapi && pnpm tsc",
+    "build": "pnpm generate:openapi && pnpm tsc && pnpm copyfiles",
     "serve": "node ./dist/index.js",
     "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
     "codegen": "graphql-codegen --config codegen.ts",
@@ -15,6 +15,7 @@
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
     "generate:openapi": "npx tsx src/bin/generateOpenApi.ts",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/.graphql\" dist/",
     "lint": "eslint ./src/**/*.{js,jsx,ts,tsx}",
     "lint-staged": "lint-staged --verbose",
     "prepare": "if [ -d node_modules/husky ]; then husky; fi"
@@ -54,6 +55,7 @@
     "@types/node": "^20.17.3",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
+    "copyfiles": "^2.4.1",
     "eslint": "^9.24.0",
     "husky": "^9.1.6",
     "lint-staged": "^16.1.4",

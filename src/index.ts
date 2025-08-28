@@ -49,6 +49,8 @@ const mount = async (app: Application): Promise<void> => {
 
 		await server.start();
 
+		app.use('/api', endpointsRouter());
+
 		app.use(
 			'/api/graphql',
 			expressMiddleware(server, {
@@ -57,7 +59,7 @@ const mount = async (app: Application): Promise<void> => {
 		);
 
 
-		app.use('/api/rest', endpointsRouter());
+		console.log(process.env.NODE_ENV);
 
 		if (process.env.NODE_ENV !== 'production') {
 			app.use('/api/docs', swaggerRouter);

@@ -16,6 +16,10 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type CreateTestInput = {
+  text: Scalars['String']['input'];
+};
+
 export type PaginatedDocs = {
   total: Scalars['Int']['output'];
 };
