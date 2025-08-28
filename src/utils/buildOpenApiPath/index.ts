@@ -30,12 +30,24 @@ export function buildOpenApiPath({
 			&& 'properties' in queryOpenApi
 		) {
 			const required = Array.isArray(queryOpenApi.required) ? queryOpenApi.required : [];
-			parameters = Object.entries(queryOpenApi.properties as Record<string, unknown>).map(([name, schema]) => ({
-				name,
-				in: 'query',
-				required: required.includes(name),
-				schema,
-			}));
+			parameters = Object.entries(queryOpenApi.properties as Record<string, unknown>).map(([name, schema]) => {
+				// Remove $ref if present in schema
+				if (schema && typeof schema === 'object' && '$ref' in (schema as object)) {
+					const { $ref, ...rest } = schema as Record<string, unknown>;
+					return {
+						name,
+						in: 'query',
+						required: required.includes(name),
+						schema: rest,
+					};
+				}
+				return {
+					name,
+					in: 'query',
+					required: required.includes(name),
+					schema,
+				};
+			});
 		}
 	}
 	const bodySchema = bodyZod ? createSchema(bodyZod, { io: 'input', schemaComponents: {} }).schema : undefined;
@@ -44,7 +56,9 @@ export function buildOpenApiPath({
 		? {
 			content: {
 				'application/json': {
-					schema: bodySchema,
+					schema: (bodySchema && typeof bodySchema === 'object' && '$ref' in bodySchema)
+						? Object.fromEntries(Object.entries(bodySchema).filter(([k]) => k !== '$ref'))
+						: bodySchema,
 				},
 			},
 		}
@@ -55,7 +69,9 @@ export function buildOpenApiPath({
 			description: 'Successful response',
 			content: {
 				'application/json': {
-					schema: responseSchema,
+					schema: (responseSchema && typeof responseSchema === 'object' && '$ref' in responseSchema)
+						? Object.fromEntries(Object.entries(responseSchema).filter(([k]) => k !== '$ref'))
+						: responseSchema,
 				},
 			},
 		},

@@ -64,6 +64,26 @@ async function main(): Promise<void> {
 			}
 			if (schema) {
 				Object.entries(schema).forEach(([endpointPath, endpointMethods]) => {
+					// Dynamically determine tag from first path segment
+					let tag = '';
+					// eslint-disable-next-line no-useless-escape
+					const match = endpointPath.match(/^\/([^\/]+)/);
+					if (match && match[1]) {
+						tag = match[1].charAt(0).toUpperCase() + match[1].slice(1);
+					}
+					// Add tags to each method
+					if (typeof endpointMethods === 'object' && endpointMethods !== null) {
+						Object.entries(endpointMethods as Record<string, any>).forEach(([method, methodObj]) => {
+							if (typeof methodObj === 'object' && methodObj !== null) {
+								if (!methodObj.tags) {
+									// eslint-disable-next-line no-param-reassign
+									methodObj.tags = [tag];
+								} else if (!methodObj.tags.includes(tag)) {
+									methodObj.tags.push(tag);
+								}
+							}
+						});
+					}
 					if (!openApi.paths[endpointPath]) {
 						openApi.paths[endpointPath] = endpointMethods;
 					} else if (typeof openApi.paths[endpointPath] === 'object' && typeof endpointMethods === 'object') {
