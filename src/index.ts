@@ -10,8 +10,10 @@ import { ApolloServer } from '@apollo/server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import helmet from 'helmet';
 import type { IResolvers } from '@graphql-tools/utils';
-import { resolvers, typeDefs } from './graphql/index.js';
 import { logger } from './lib/logger/index.js';
+import { resolvers } from './graphql/resolvers.js';
+import { typeDefs } from './graphql/typeDefs.js';
+import { endpointsRouter } from './endpoints/index.js';
 
 dotenv();
 
@@ -47,11 +49,13 @@ const mount = async (app: Application): Promise<void> => {
 		await server.start();
 
 		app.use(
-			'/api',
+			'/api/graphql',
 			expressMiddleware(server, {
 				context: async ({ req, res }) => ({ req, res }),
 			}) as unknown as express.RequestHandler,
 		);
+
+		app.use('/api/rest', endpointsRouter());
 
 		httpServer.listen(process.env.PORT, () => {
 			logger.info(`Server is running on port ${process.env.PORT}`);

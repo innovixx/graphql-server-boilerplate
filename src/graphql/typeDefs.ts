@@ -8,7 +8,7 @@ import { print } from 'graphql';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const typesArray = loadFilesSync(path.join(__dirname, './typeDefs/**/*.graphql'));
+const typesArray = loadFilesSync(path.join(__dirname, '../**/.graphql'));
 
 const mergedTypeDefs = mergeTypeDefs(typesArray);
 const sdl = print(mergedTypeDefs);

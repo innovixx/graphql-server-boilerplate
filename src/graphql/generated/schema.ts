@@ -12,9 +12,56 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Date: { input: any; output: any; }
+  JSON: { input: any; output: any; }
+};
+
+export type PaginatedDocs = {
+  total: Scalars['Int']['output'];
+};
+
+export type PaginatedTests = PaginatedDocs & {
+  __typename?: 'PaginatedTests';
+  items?: Maybe<Array<Test>>;
+  total: Scalars['Int']['output'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  test?: Maybe<Scalars['String']['output']>;
+  tests: PaginatedTests;
+};
+
+
+export type QueryTestsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<Scalars['String']['input']>;
+  where?: InputMaybe<Where>;
+};
+
+export type Test = {
+  __typename?: 'Test';
+  createdAt: Scalars['Date']['output'];
+  id: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+  updatedAt: Scalars['Date']['output'];
+};
+
+export type Where = {
+  and?: InputMaybe<Array<InputMaybe<Where>>>;
+  field: Scalars['String']['input'];
+  or?: InputMaybe<Array<InputMaybe<Where>>>;
+  value?: InputMaybe<WhereField>;
+};
+
+export type WhereField = {
+  contains?: InputMaybe<Scalars['JSON']['input']>;
+  equals?: InputMaybe<Scalars['JSON']['input']>;
+  exists?: InputMaybe<Scalars['JSON']['input']>;
+  greater_than?: InputMaybe<Scalars['JSON']['input']>;
+  greater_than_equal?: InputMaybe<Scalars['JSON']['input']>;
+  in?: InputMaybe<Scalars['JSON']['input']>;
+  less_than?: InputMaybe<Scalars['JSON']['input']>;
+  not_equals?: InputMaybe<Scalars['JSON']['input']>;
+  not_in?: InputMaybe<Scalars['JSON']['input']>;
 };

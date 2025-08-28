@@ -1,0 +1,8 @@
+type PaginatedTests implements PaginatedDocs {
+	total: Int!
+	items: [Test!]
+}
+
+type Query {
+	tests(limit: Int, offset: Int, where: Where, sortBy: String): PaginatedTests!
+}
