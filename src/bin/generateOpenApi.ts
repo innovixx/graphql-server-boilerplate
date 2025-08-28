@@ -22,7 +22,7 @@ const openApi: OpenApiType = {
 		description: 'Auto-generated OpenAPI documentation.',
 		version: '1.0.0',
 	},
-	servers: [{ url: 'http://localhost:9000/api/rest' }],
+	servers: [{ url: 'http://localhost:9000/api' }],
 	paths: {},
 	components: {},
 };
