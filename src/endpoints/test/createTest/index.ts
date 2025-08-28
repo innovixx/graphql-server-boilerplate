@@ -9,9 +9,7 @@ type Props = {
 }
 
 
-export const createTest = async ({
-	input,
-}: Props): Promise<Test> => {
+export const createTest = async ({ input }: Props): Promise<Test> => {
 	const item = await maindb.test.create({
 		data: {
 			text: input.text,

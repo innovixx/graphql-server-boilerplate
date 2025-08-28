@@ -2,7 +2,7 @@ import type { QueryParams } from '../../lib/types.js';
 
 export const convertQuerySortToPrismaOrderBy = (sortBy: QueryParams['sortBy']): Record<string, 'asc' | 'desc'> => {
 	if (!sortBy) {
-		return {};
+		return { createdAt: 'desc' };
 	}
 
 	const sortArray = Array.isArray(sortBy) ? sortBy : sortBy.split(',');
