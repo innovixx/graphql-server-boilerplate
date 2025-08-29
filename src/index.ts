@@ -14,7 +14,6 @@ import { logger } from './lib/logger/index.js';
 import { resolvers } from './graphql/resolvers.js';
 import { typeDefs } from './graphql/typeDefs.js';
 import { endpointsRouter } from './endpoints/index.js';
-import swaggerRouter from './routes/swagger.js';
 
 dotenv();
 
