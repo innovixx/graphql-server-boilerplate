@@ -33,7 +33,7 @@ export const graphqlGetHandler = (
 	getFn: EndpointHandler<any, any>,
 ) => async (_: any, args: any, context: { req: Request; res: Response }, info?: any): Promise<any> => {
 	let select = info ? extractSelectFromInfo(info) : undefined;
-	if (select && typeof select === 'object' && 'total' in select && 'items' in select) {
+	if (select && typeof select === 'object' && 'items' in select) {
 		select = select.items as Record<string, unknown>;
 	}
 
