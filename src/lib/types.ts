@@ -31,18 +31,11 @@ export const WhereFieldSchema = z.object(
 );
 export type WhereField = z.infer<typeof WhereFieldSchema>;
 
-export const WhereSchema: z.ZodType<unknown> = z.lazy(() => z.record(
-	z.union([
-		z.string(),
-		z.literal('and'),
-		z.literal('or'),
-	]),
-	z.union([z.array(WhereSchema), WhereFieldSchema]),
-));
-export type Where = z.infer<typeof WhereSchema>;
+export type Where = Record<string, WhereField | Where[]>;
+export const WhereSchema = z.record(z.string(), z.union([WhereFieldSchema, z.array(z.any())]));
 
-export const SelectIncludeTypeSchema: z.ZodType<unknown> = z.lazy(() => z.record(z.string(), z.union([SelectIncludeTypeSchema, z.literal(true)])));
-export type SelectIncludeType = z.infer<typeof SelectIncludeTypeSchema>;
+export type SelectIncludeType = { [key: string]: true | SelectIncludeType };
+export const SelectIncludeTypeSchema: z.ZodType<SelectIncludeType> = z.lazy(() => z.record(z.string(), z.union([z.literal(true), SelectIncludeTypeSchema])));
 
 export const QueryParamsSchema = z.object({
 	limit: z.number().optional(),
