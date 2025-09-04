@@ -17,9 +17,12 @@ export function getPrismaSelectFromInfo(
 			if (
 				fieldTree.fieldsByTypeName
 				&& Object.keys(fieldTree.fieldsByTypeName).length > 0
-				&& level < DB_SELECT_MAX_LEVEL
 			) {
-				select[fieldName] = { select: buildSelect(fieldTree, level + 1) };
+				if (level < DB_SELECT_MAX_LEVEL) {
+					select[fieldName] = { select: buildSelect(fieldTree, level + 1) };
+				} else {
+					throw new Error(`Exceeded maximum nested select level (${DB_SELECT_MAX_LEVEL}).`);
+				}
 			} else {
 				select[fieldName] = true;
 			}
