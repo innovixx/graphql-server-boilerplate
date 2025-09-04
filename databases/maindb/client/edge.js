@@ -124,7 +124,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/workspaces/graphql-server-boilerplate/databases/maindb/client",
+      "value": "/workspaces/graphql-fullstack-boilerplate/server/databases/maindb/client",
       "fromEnvVar": null
     },
     "config": {
@@ -138,7 +138,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/workspaces/graphql-server-boilerplate/databases/maindb/schema.prisma",
+    "sourceFilePath": "/workspaces/graphql-fullstack-boilerplate/server/databases/maindb/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

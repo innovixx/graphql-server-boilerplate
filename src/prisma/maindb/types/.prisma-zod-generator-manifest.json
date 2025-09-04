@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "generatorVersion": "0.0.0",
-  "generatedAt": "2025-08-28T13:55:38.865Z",
-  "outputPath": "/workspaces/graphql-server-boilerplate/src/prisma/maindb/types",
+  "generatedAt": "2025-09-04T08:17:01.047Z",
+  "outputPath": "/workspaces/graphql-fullstack-boilerplate/server/src/prisma/maindb/types",
   "files": [
     "schemas/enums/TransactionIsolationLevel.schema.ts",
     "schemas/enums/TestScalarFieldEnum.schema.ts",
