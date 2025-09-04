@@ -125,7 +125,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/workspaces/graphql-fullstack-boilerplate/server/databases/maindb/client",
+      "value": "/workspaces/graphql-server-boilerplate/databases/maindb/client",
       "fromEnvVar": null
     },
     "config": {
@@ -139,7 +139,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/workspaces/graphql-fullstack-boilerplate/server/databases/maindb/schema.prisma",
+    "sourceFilePath": "/workspaces/graphql-server-boilerplate/databases/maindb/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -161,8 +161,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ngenerator zod {\n  provider = \"prisma-zod-generator\"\n  output   = \"../../src/prisma/maindb/types\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"MAIN_DATABASE_URL\")\n}\n\nmodel Test {\n  id        String   @id @default(cuid())\n  text      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "e3d4dfd30accd2942529c6587a1e24ab751c01bc8b59035032bef0e15c35b8c9",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ngenerator zod {\n  provider = \"prisma-zod-generator\"\n  output   = \"../../src/prisma/maindb/types\"\n  config   = \"./zod-generator.config.json\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"MAIN_DATABASE_URL\")\n}\n\nmodel Test {\n  id        String   @id @default(cuid())\n  text      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "ecf951a7f63e103aadc69bc8cf2fee1f3f1f8e038beec1446030965815e791df",
   "copyEngine": true
 }
 

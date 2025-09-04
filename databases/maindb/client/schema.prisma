@@ -9,6 +9,7 @@ generator client {
 generator zod {
   provider = "prisma-zod-generator"
   output   = "../../src/prisma/maindb/types"
+  config   = "./zod-generator.config.json"
 }
 
 datasource db {
