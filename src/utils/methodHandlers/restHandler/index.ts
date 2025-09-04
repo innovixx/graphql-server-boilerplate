@@ -7,7 +7,7 @@ export const restHandler = (
 ) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		let result;
-		if (req.body) {
+		if (req.body && Object.keys(req.body).length > 0) {
 			result = await Fn(req.body, req, res);
 		} else {
 			const params = parseQueryParams(req.query);
