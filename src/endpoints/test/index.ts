@@ -1,36 +1,34 @@
 import { Router } from 'express';
 import type { IResolvers } from '@graphql-tools/utils';
-import { restGetHandler } from '../../utils/methodHandlers/restGetHandler/index.js';
 import { getTests } from './getTests/index.js';
-import { restPostHandler } from '../../utils/methodHandlers/restPostHandler/index.js';
 import { createTest } from './createTest/index.js';
-import { graphqlPostHandler } from '../../utils/methodHandlers/graphqlPostHandler/index.js';
-import { graphqlGetHandler } from '../../utils/methodHandlers/graphqlGetHandler/index.js';
 import { updateTest } from './updateTest/index.js';
 import { deleteTest } from './deleteTest/index.js';
 import { getTest } from './getTest/index.js';
+import { restHandler } from '../../utils/methodHandlers/restHandler/index.js';
+import { graphqlHandler } from '../../utils/methodHandlers/graphqlHandler/index.js';
 
 
 export const testsRouter = (): Router => {
 	const router = Router();
 
-	router.get('/get-tests', restGetHandler(getTests));
-	router.get('/get-test', restGetHandler(getTest));
-	router.post('/create-test', restPostHandler(createTest));
-	router.put('/update-test', restPostHandler(updateTest));
-	router.delete('/delete-test', restPostHandler(deleteTest));
+	router.get('/get-tests', restHandler(getTests));
+	router.get('/get-test', restHandler(getTest));
+	router.post('/create-test', restHandler(createTest));
+	router.put('/update-test', restHandler(updateTest));
+	router.delete('/delete-test', restHandler(deleteTest));
 
 	return router;
 };
 
 export const testResolvers: IResolvers = {
 	Query: {
-		tests: graphqlGetHandler(getTests),
-		test: graphqlGetHandler(getTest),
+		tests: graphqlHandler(getTests),
+		test: graphqlHandler(getTest),
 	},
 	Mutation: {
-		createTest: graphqlPostHandler(createTest),
-		updateTest: graphqlPostHandler(updateTest),
-		deleteTest: graphqlPostHandler(deleteTest),
+		createTest: graphqlHandler(createTest),
+		updateTest: graphqlHandler(updateTest),
+		deleteTest: graphqlHandler(deleteTest),
 	},
 };

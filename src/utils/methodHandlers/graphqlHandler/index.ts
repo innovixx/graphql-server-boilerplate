@@ -29,21 +29,31 @@ function extractSelectFromInfo(info: unknown): Record<string, unknown> {
 }
 
 
-export const graphqlGetHandler = (
+export const graphqlHandler = (
 	getFn: EndpointHandler<any, any>,
 ) => async (_: any, args: any, context: { req: Request; res: Response }, info?: any): Promise<any> => {
-	let select = info ? extractSelectFromInfo(info) : undefined;
-	if (select && typeof select === 'object' && 'items' in select) {
-		select = select.items as Record<string, unknown>;
-	}
-
-	const params = {
-		...(typeof args === 'object' && args !== null ? args : {}),
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		where: covertGraphqlWhereToRestWhere((args as any)?.where),
-		select,
-	};
 	const req = context?.req;
 	const res = context?.res;
-	return getFn(params, req, res);
+
+	let result;
+
+	if (info.operation.operation === 'query') {
+		let select = info ? extractSelectFromInfo(info) : undefined;
+		if (select && typeof select === 'object' && 'items' in select) {
+			select = select.items as Record<string, unknown>;
+		}
+
+		const params = {
+			...(typeof args === 'object' && args !== null ? args : {}),
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			where: covertGraphqlWhereToRestWhere((args as any)?.where),
+			select,
+		};
+
+		result = getFn(params, req, res);
+	} else {
+		result = getFn(args, req, res);
+	}
+
+	return result;
 };
