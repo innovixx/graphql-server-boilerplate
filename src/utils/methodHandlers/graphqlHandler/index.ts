@@ -1,32 +1,7 @@
 import type { Request, Response } from 'express';
-import { parseResolveInfo } from 'graphql-parse-resolve-info';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { covertGraphqlWhereToRestWhere } from '../../covertGraphqlWhereToRestWhere/index.js';
-
-
-function extractSelectFromInfo(info: unknown): Record<string, unknown> {
-	let parsedInfo: any;
-	if (info && typeof info === 'object' && 'fieldNodes' in info) {
-		parsedInfo = parseResolveInfo(info as any);
-	} else {
-		parsedInfo = info;
-	}
-	if (!parsedInfo || !parsedInfo.fieldsByTypeName) return {};
-	const typeFieldsObj = Object.values(parsedInfo.fieldsByTypeName)[0];
-	if (!typeFieldsObj) return {};
-	const typeFields = typeFieldsObj as { [key: string]: any };
-	const select: Record<string, unknown> = {};
-	// eslint-disable-next-line no-restricted-syntax
-	for (const key of Object.keys(typeFields)) {
-		const field = typeFields[key];
-		if (field.fieldsByTypeName && Object.keys(field.fieldsByTypeName).length > 0) {
-			select[key] = extractSelectFromInfo(field);
-		} else {
-			select[key] = true;
-		}
-	}
-	return select;
-}
+import { getPrismaSelectFromInfo } from '../parsePrismaSelectFromInfo/index.js';
 
 
 export const graphqlHandler = (
@@ -38,11 +13,7 @@ export const graphqlHandler = (
 	let result;
 
 	if (info.operation.operation === 'query') {
-		let select = info ? extractSelectFromInfo(info) : undefined;
-		if (select && typeof select === 'object' && 'items' in select) {
-			select = select.items as Record<string, unknown>;
-		}
-
+		const select = info ? getPrismaSelectFromInfo(info) : undefined;
 		const params = {
 			...(typeof args === 'object' && args !== null ? args : {}),
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

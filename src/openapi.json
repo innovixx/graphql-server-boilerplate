@@ -234,7 +234,55 @@
             "name": "where",
             "in": "query",
             "required": false,
-            "schema": {}
+            "schema": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "equals": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "contains": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "not_equals": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "in": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "not_in": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "exists": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "greater_than": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "greater_than_equal": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "less_than": {
+                        "$ref": "#/components/schemas/__schema0"
+                      },
+                      "less_than_equal": {
+                        "$ref": "#/components/schemas/__schema0"
+                      }
+                    }
+                  },
+                  {
+                    "type": "array",
+                    "items": {}
+                  }
+                ]
+              }
+            }
           },
           {
             "name": "select",
