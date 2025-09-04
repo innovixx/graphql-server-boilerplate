@@ -1,3 +1,5 @@
 {
-	"mode": "minimal"
+	"mode": "custom",
+	"useMultipleFiles": false,
+	"exportTypedSchemas": false
 }

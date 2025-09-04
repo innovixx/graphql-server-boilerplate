@@ -1,7 +1,7 @@
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { TestResultSchema } from '../../../prisma/maindb/types/schemas/variants/result/Test.result.js';
+import { TestCreateResultSchema } from '../../../prisma/maindb/types/schemas.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
 import { CreateTestInputSchema, type CreateTestInput } from './types.js';
 
@@ -23,5 +23,5 @@ export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
 	method: 'post',
 	summary: 'Create a new test',
 	bodyZod: CreateTestInputSchema,
-	responseZod: TestResultSchema,
+	responseZod: TestCreateResultSchema,
 });
