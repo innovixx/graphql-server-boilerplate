@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
 import { DeleteTestInputSchema, type DeleteTestInput } from './types.js';
+import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
 
 type Props = DeleteTestInput
 

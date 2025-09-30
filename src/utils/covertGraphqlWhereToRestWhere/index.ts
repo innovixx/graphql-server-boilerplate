@@ -6,7 +6,17 @@ const convertWhereField = (whereField: any): WhereField => {
 	// eslint-disable-next-line no-restricted-syntax
 	for (const key of validOperators) {
 		if (whereField[key] !== undefined) {
-			result[key] = whereField[key];
+			if (key === 'not_equals') {
+				result.not = { equals: whereField[key] };
+			} else {
+				result[key] = whereField[key];
+			}
+		}
+	}
+	if (whereField.mode !== undefined) {
+		const { mode } = whereField;
+		if (mode === 'default' || mode === 'insensitive') {
+			(result as any).mode = mode;
 		}
 	}
 	return result;
@@ -17,9 +27,24 @@ export const covertGraphqlWhereToRestWhere = (where: any): Where => {
 	// eslint-disable-next-line no-restricted-syntax
 	for (const key in where) {
 		if (key === 'and' || key === 'or') {
-			(result as any)[key] = where[key].map((subWhere: any) => covertGraphqlWhereToRestWhere(subWhere));
+			const capitalizedKey = key.toUpperCase();
+			(result as any)[capitalizedKey] = where[key].map((subWhere: any) => covertGraphqlWhereToRestWhere(subWhere));
 		} else if (key === 'field') {
-			(result as any)[where[key]] = convertWhereField(where.value);
+			if (where.value !== undefined) {
+				(result as any)[where[key]] = convertWhereField(where.value);
+			}
+			if (where.relation) {
+				const relationFilters: Record<string, any> = {};
+				Object.keys(where.relation).forEach((relOp) => {
+					if (where.relation[relOp]) {
+						relationFilters[relOp] = covertGraphqlWhereToRestWhere(where.relation[relOp]);
+					}
+				});
+				(result as any)[where[key]] = {
+					...(result as any)[where[key]] || {},
+					...relationFilters,
+				};
+			}
 		}
 	}
 	return result;

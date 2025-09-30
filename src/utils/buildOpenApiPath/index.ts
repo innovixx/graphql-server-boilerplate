@@ -5,10 +5,11 @@ import type { ZodType } from 'zod';
 type OpenApiSchemaProps = {
 	path: string;
 	method: string;
-	summary: string;
+	summary?: string;
 	queryZod?: ZodType;
 	bodyZod?: ZodType;
 	responseZod?: ZodType;
+	secure?: boolean;
 };
 
 export function buildOpenApiPath({
@@ -18,6 +19,7 @@ export function buildOpenApiPath({
 	queryZod,
 	bodyZod,
 	responseZod,
+	secure,
 }: OpenApiSchemaProps): Record<string, unknown> {
 	let parameters: Array<Record<string, unknown>> = [];
 	if (queryZod) {
@@ -31,6 +33,38 @@ export function buildOpenApiPath({
 		) {
 			const required = Array.isArray(queryOpenApi.required) ? queryOpenApi.required : [];
 			parameters = Object.entries(queryOpenApi.properties as Record<string, unknown>).map(([name, schema]) => {
+				if (name === 'where') {
+					// Reference the shared OpenAPI parameter for 'where'
+					return {
+						$ref: '#/components/parameters/Where',
+					};
+				}
+				if (name === 'select') {
+					// Reference the shared OpenAPI parameter for 'select'
+					return {
+						$ref: '#/components/parameters/Select',
+					};
+				}
+				if (name === 'sortBy') {
+					// Reference the shared OpenAPI parameter for 'select'
+					return {
+						$ref: '#/components/parameters/SortBy',
+					};
+				}
+				// If schema is a complex type (object or array), treat as optional string
+				if (
+					schema
+					&& typeof schema === 'object'
+					&& 'type' in schema
+					&& ((schema as Record<string, unknown>).type === 'object' || (schema as Record<string, unknown>).type === 'array')
+				) {
+					return {
+						name,
+						in: 'query',
+						required: false,
+						schema: { type: 'string' },
+					};
+				}
 				// Remove $ref if present in schema
 				if (schema && typeof schema === 'object' && '$ref' in (schema as object)) {
 					const { $ref, ...rest } = schema as Record<string, unknown>;
@@ -84,6 +118,7 @@ export function buildOpenApiPath({
 				...(parameters.length ? { parameters } : {}),
 				...(requestBody ? { requestBody } : {}),
 				responses: openApiResponses,
+				...(secure ? { security: [{ ViewerCsrfToken: [] }] } : {}),
 			},
 		},
 	};

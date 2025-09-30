@@ -5,23 +5,29 @@ import { DB_SELECT_MAX_LEVEL } from '../../../lib/constants.js';
 
 export function getPrismaSelectFromInfo(
 	info: GraphQLResolveInfo,
+	maxDepth?: number,
 ): unknown {
 	const parsedInfo = parseResolveInfo(info);
-	if (!parsedInfo || !parsedInfo.fieldsByTypeName) return {};
+
+	if (
+		!parsedInfo
+		|| !parsedInfo.fieldsByTypeName
+		|| Object.keys(parsedInfo.fieldsByTypeName).length === 0
+	) return undefined;
 
 	function buildSelect(tree: ResolveTree, level: number): Record<string, any> {
 		const select: Record<string, any> = {};
-		if (level > DB_SELECT_MAX_LEVEL) return select;
+		if (level > (maxDepth || DB_SELECT_MAX_LEVEL)) return select;
 		// eslint-disable-next-line no-restricted-syntax
 		for (const [fieldName, fieldTree] of Object.entries(tree.fieldsByTypeName[Object.keys(tree.fieldsByTypeName)[0]])) {
 			if (
 				fieldTree.fieldsByTypeName
 				&& Object.keys(fieldTree.fieldsByTypeName).length > 0
 			) {
-				if (level < DB_SELECT_MAX_LEVEL) {
+				if (level < (maxDepth || DB_SELECT_MAX_LEVEL)) {
 					select[fieldName] = { select: buildSelect(fieldTree, level + 1) };
 				} else {
-					throw new Error(`Exceeded maximum nested select level (${DB_SELECT_MAX_LEVEL}).`);
+					throw new Error(`Exceeded maximum nested select level (${(maxDepth || DB_SELECT_MAX_LEVEL)}).`);
 				}
 			} else {
 				select[fieldName] = true;

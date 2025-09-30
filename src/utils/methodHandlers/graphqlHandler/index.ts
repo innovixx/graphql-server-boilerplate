@@ -6,6 +6,7 @@ import { getPrismaSelectFromInfo } from '../parsePrismaSelectFromInfo/index.js';
 
 export const graphqlHandler = (
 	getFn: EndpointHandler<any, any>,
+	maxDepth?: number,
 ) => async (_: any, args: any, context: { req: Request; res: Response }, info?: any): Promise<any> => {
 	const req = context?.req;
 	const res = context?.res;
@@ -13,11 +14,13 @@ export const graphqlHandler = (
 	let result;
 
 	if (info.operation.operation === 'query') {
-		const select = info ? getPrismaSelectFromInfo(info) : undefined;
+		const select = info ? getPrismaSelectFromInfo(info, maxDepth) : undefined;
+
 		const params = {
 			...(typeof args === 'object' && args !== null ? args : {}),
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			where: covertGraphqlWhereToRestWhere((args as any)?.where),
+			cursor: (args as any)?.cursor,
 			select,
 		};
 

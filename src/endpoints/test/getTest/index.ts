@@ -1,10 +1,9 @@
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import type { EndpointHandler } from '../../../lib/types.js';
-import { PaginatedDocsSchema } from '../../../lib/types.js';
+import { PaginatedDocsSchema, type EndpointHandler } from '../../../lib/types.js';
 import { GetTestInputSchema, type GetTestInput } from './types.js';
-import { TestFindUniqueResultSchema } from '../../../prisma/maindb/types/schemas.js';
+import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
+import { TestSchema } from '../../../prisma/maindb/types/index.js';
 
 type Props = GetTestInput
 
@@ -29,5 +28,5 @@ export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
 	method: 'get',
 	summary: 'Get test',
 	queryZod: GetTestInputSchema,
-	responseZod: PaginatedDocsSchema(TestFindUniqueResultSchema),
+	responseZod: PaginatedDocsSchema(TestSchema),
 });

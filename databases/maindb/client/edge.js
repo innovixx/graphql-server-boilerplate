@@ -124,7 +124,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/workspaces/graphql-server-boilerplate/databases/maindb/client",
+      "value": "/workspaces/graphql-fullstack-boilerplate/server/databases/maindb/client",
       "fromEnvVar": null
     },
     "config": {
@@ -138,7 +138,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/workspaces/graphql-server-boilerplate/databases/maindb/schema.prisma",
+    "sourceFilePath": "/workspaces/graphql-fullstack-boilerplate/server/databases/maindb/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -160,8 +160,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ngenerator zod {\n  provider = \"prisma-zod-generator\"\n  output   = \"../../src/prisma/maindb/types\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"MAIN_DATABASE_URL\")\n}\n\nmodel Test {\n  id        String   @id @default(cuid())\n  text      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
-  "inlineSchemaHash": "e3d4dfd30accd2942529c6587a1e24ab751c01bc8b59035032bef0e15c35b8c9",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./client\"\n}\n\ngenerator zod {\n  provider         = \"zod-prisma-types\"\n  output           = \"../../src/prisma/maindb/types\"\n  prismaClientPath = \"../../../../databases/maindb/client/client.js\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"MAIN_DATABASE_URL\")\n}\n\nmodel Test {\n  id        String   @id @default(cuid())\n  text      String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchemaHash": "0ac67e511ff8117ea487188d3579c5148e59d679a65aed61b44777024e3bc43b",
   "copyEngine": true
 }
 config.dirname = '/'

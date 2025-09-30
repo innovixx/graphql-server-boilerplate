@@ -7,8 +7,9 @@ generator client {
 }
 
 generator zod {
-  provider = "prisma-zod-generator"
-  output   = "../../src/prisma/maindb/types"
+  provider         = "zod-prisma-types"
+  output           = "../../src/prisma/maindb/types"
+  prismaClientPath = "../../../../databases/maindb/client/client.js"
 }
 
 datasource db {
