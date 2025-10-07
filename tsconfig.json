@@ -18,6 +18,6 @@
   "exclude": [
     "node_modules",
     "databases",
-    "src/prisma/maindb/types"
+    "src/zod/maindb/types"
   ],
 }

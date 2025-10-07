@@ -3,7 +3,7 @@ import { maindb } from '../../../prisma/maindb/index.js';
 import { PaginatedDocsSchema, type EndpointHandler } from '../../../lib/types.js';
 import { GetTestInputSchema, type GetTestInput } from './types.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import { TestSchema } from '../../../prisma/maindb/types/index.js';
+import { TestSchema } from '../../../zod/maindb/types/index.js';
 
 type Props = GetTestInput
 

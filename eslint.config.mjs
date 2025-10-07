@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import baseConfig from '@innovixx/eslint-config/config/configs/base/index.mjs';
 import reactConfig from '@innovixx/eslint-config/config/configs/react/index.mjs';
 import typescriptConfig from '@innovixx/eslint-config/config/configs/typescript/index.mjs';
@@ -6,25 +7,24 @@ import graphqlPlugin from '@graphql-eslint/eslint-plugin';
 export default [
 	baseConfig,
 	reactConfig,
-	typescriptConfig,
+	{
+		files: ['**/*.{ts,tsx}'],
+		...typescriptConfig,
+	},
 	{
 		ignores: [
 			'databases',
 			'graphql.config.ts',
 			'schema.graphql',
-			'src/graphql/generated',
-			'codegen.ts',
-			'src/prisma/maindb/types',
+			'src/zod/maindb/types',
 		],
-	},
-	{
-		files: ['**/*.{js,jsx,ts,tsx}'],
 	},
 	{
 		files: ['**/*.graphql'],
 		languageOptions: {
 			parser: graphqlPlugin.parser,
 		},
+		ignores: ['**/node_modules/**', 'src/graphql/schema.graphql'],
 		plugins: {
 			'@graphql-eslint': graphqlPlugin,
 		},

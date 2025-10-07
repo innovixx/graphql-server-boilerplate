@@ -6,17 +6,16 @@
   "author": "Innovixx <support@innovixx.co.uk>",
   "type": "module",
   "scripts": {
-    "dev": "pnpm generate:openapi && pnpm codegen --watch & nodemon --exec tsx src/index.ts",
+    "dev": "pnpm generate:openapi & nodemon --exec tsx src/index.ts",
     "build": "pnpm generate:openapi && pnpm tsc && pnpm copyfiles",
     "serve": "node ./dist/index.js",
     "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
-    "codegen": "graphql-codegen --config codegen.ts",
     "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
     "generate:openapi": "npx tsx src/bin/generateOpenApi.ts",
     "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/.graphql\" dist/",
-    "lint": "eslint ./src/**/*.{js,jsx,ts,tsx}",
+    "lint": "eslint ./src/**/*.{js,jsx,ts,tsx,graphql}",
     "lint-staged": "lint-staged --verbose",
     "prepare": "if [ -d node_modules/husky ]; then husky; fi"
   },
@@ -71,6 +70,7 @@
     "typescript-json-schema": "^0.65.1"
   },
   "lint-staged": {
+    "**/*.graphql": "eslint",
     "**/*.{js,ts,jsx,tsx}": [
       "eslint --quiet",
       "bash -c tsc"

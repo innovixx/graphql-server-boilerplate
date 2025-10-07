@@ -1,11 +1,10 @@
-import { z } from 'zod';
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { DB_RECORDS_DEFAULT_LIMIT, DB_RECORDS_MAX_LIMIT } from '../../../lib/constants.js';
 import { convertQuerySortToPrismaOrderBy } from '../../../utils/convertQuerySortToPrismaOrderBy/index.js';
 import { PaginatedDocsSchema, QueryParamsSchema, type EndpointHandler, type PaginatedDocs, type QueryParams } from '../../../lib/types.js';
 import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import { TestSchema } from '../../../prisma/maindb/types/index.js';
+import { TestSchema } from '../../../zod/maindb/types/index.js';
 
 type Props = QueryParams
 
