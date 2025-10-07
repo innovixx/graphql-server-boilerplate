@@ -1,4 +1,5 @@
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -73,7 +74,7 @@ async function main(): Promise<void> {
 					}
 					// Add tags to each method
 					if (typeof endpointMethods === 'object' && endpointMethods !== null) {
-						Object.entries(endpointMethods as Record<string, any>).forEach(([method, methodObj]) => {
+						Object.entries(endpointMethods as Record<string, any>).forEach(([_, methodObj]) => {
 							if (typeof methodObj === 'object' && methodObj !== null) {
 								if (!methodObj.tags) {
 									// eslint-disable-next-line no-param-reassign

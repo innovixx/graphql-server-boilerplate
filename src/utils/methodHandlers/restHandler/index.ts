@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextFunction, Request, Response } from 'express';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { parseQueryParams } from '../../parseQueryString/index.js';

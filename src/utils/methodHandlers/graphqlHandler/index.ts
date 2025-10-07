@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Request, Response } from 'express';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { covertGraphqlWhereToRestWhere } from '../../covertGraphqlWhereToRestWhere/index.js';
@@ -18,7 +19,7 @@ export const graphqlHandler = (
 
 		const params = {
 			...(typeof args === 'object' && args !== null ? args : {}),
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 			where: covertGraphqlWhereToRestWhere((args as any)?.where),
 			cursor: (args as any)?.cursor,
 			select,
