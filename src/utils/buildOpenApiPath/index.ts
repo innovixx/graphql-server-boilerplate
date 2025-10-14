@@ -1,7 +1,6 @@
 import { createSchema } from 'zod-openapi';
 import type { ZodType } from 'zod';
 
-
 type OpenApiSchemaProps = {
 	path: string;
 	method: string;
@@ -12,6 +11,49 @@ type OpenApiSchemaProps = {
 	secure?: boolean;
 };
 
+function getBodyContent(bodyZod: ZodType): Record<string, unknown> {
+	const { schema } = createSchema(bodyZod, { io: 'input', schemaComponents: {} });
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	function hasFileField(obj: any, path: string[] = []): boolean {
+		if (obj && typeof obj === 'object') {
+			if ('properties' in obj && typeof obj.properties === 'object') {
+				// eslint-disable-next-line guard-for-in, no-restricted-syntax
+				for (const key in obj.properties) {
+					const prop = obj.properties[key];
+					// Debug log for each property
+					if (
+						prop
+						&& typeof prop === 'object'
+						&& !('$ref' in prop)
+						&& (prop as { type?: string; format?: string }).type === 'string'
+						&& (prop as { type?: string; format?: string }).format === 'binary'
+					) {
+						return true;
+					}
+					// Recursively check nested objects
+					if (hasFileField(prop, [...path, key])) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	const hasFile = hasFileField(schema);
+	if (hasFile) {
+		return {
+			'multipart/form-data': { schema },
+			'application/json': { schema },
+		};
+	}
+	return {
+		'application/json': { schema },
+	};
+}
+
+
 export function buildOpenApiPath({
 	path,
 	method,
@@ -21,105 +63,65 @@ export function buildOpenApiPath({
 	responseZod,
 	secure,
 }: OpenApiSchemaProps): Record<string, unknown> {
-	let parameters: Array<Record<string, unknown>> = [];
-	if (queryZod) {
-		const queryOpenApi = queryZod ? createSchema(queryZod, { io: 'input', schemaComponents: {} }).schema : undefined;
-		if (
-			typeof queryOpenApi === 'object'
-			&& queryOpenApi !== null
-			&& 'type' in queryOpenApi
-			&& queryOpenApi.type === 'object'
-			&& 'properties' in queryOpenApi
-		) {
-			const required = Array.isArray(queryOpenApi.required) ? queryOpenApi.required : [];
-			parameters = Object.entries(queryOpenApi.properties as Record<string, unknown>).map(([name, schema]) => {
-				if (name === 'where') {
-					// Reference the shared OpenAPI parameter for 'where'
-					return {
-						$ref: '#/components/parameters/Where',
-					};
-				}
-				if (name === 'select') {
-					// Reference the shared OpenAPI parameter for 'select'
-					return {
-						$ref: '#/components/parameters/Select',
-					};
-				}
-				if (name === 'sortBy') {
-					// Reference the shared OpenAPI parameter for 'select'
-					return {
-						$ref: '#/components/parameters/SortBy',
-					};
-				}
-				// If schema is a complex type (object or array), treat as optional string
-				if (
-					schema
-					&& typeof schema === 'object'
-					&& 'type' in schema
-					&& ((schema as Record<string, unknown>).type === 'object' || (schema as Record<string, unknown>).type === 'array')
-				) {
-					return {
-						name,
-						in: 'query',
-						required: false,
-						schema: { type: 'string' },
-					};
-				}
-				// Remove $ref if present in schema
-				if (schema && typeof schema === 'object' && '$ref' in (schema as object)) {
-					const { $ref, ...rest } = schema as Record<string, unknown>;
-					return {
-						name,
-						in: 'query',
-						required: required.includes(name),
-						schema: rest,
-					};
-				}
-				return {
-					name,
-					in: 'query',
-					required: required.includes(name),
-					schema,
-				};
-			});
-		}
-	}
-	const bodySchema = bodyZod ? createSchema(bodyZod, { io: 'input', schemaComponents: {} }).schema : undefined;
-	const responseSchema = responseZod ? createSchema(responseZod, { io: 'output', schemaComponents: {} }).schema : undefined;
-	const requestBody = bodySchema
-		? {
-			content: {
-				'application/json': {
-					schema: (bodySchema && typeof bodySchema === 'object' && '$ref' in bodySchema)
-						? Object.fromEntries(Object.entries(bodySchema).filter(([k]) => k !== '$ref'))
-						: bodySchema,
-				},
-			},
-		}
-		: undefined;
-
-	const openApiResponses = {
-		200: {
-			description: 'Successful response',
-			content: {
-				'application/json': {
-					schema: (responseSchema && typeof responseSchema === 'object' && '$ref' in responseSchema)
-						? Object.fromEntries(Object.entries(responseSchema).filter(([k]) => k !== '$ref'))
-						: responseSchema,
+	const operation: Record<string, unknown> = {
+		summary,
+		tags: [path.replace(/^\//, '').split('/')[0]],
+		responses: {
+			200: {
+				description: 'Successful response',
+				content: {
+					'application/json': {
+						schema: responseZod
+							? createSchema(responseZod, { io: 'output', schemaComponents: {} }).schema
+							: {},
+					},
 				},
 			},
 		},
+		...(secure && { security: [{ ViewerCsrfToken: [] }] }),
 	};
+
+	if (queryZod) {
+		const { schema } = createSchema(queryZod, { io: 'input', schemaComponents: {} });
+		if (schema && typeof schema === 'object' && 'properties' in schema) {
+			operation.parameters = Object.entries((schema as { properties: Record<string, unknown> }).properties).map(
+				([name, propSchema]) => {
+					// For where, select, cursor: treat as single object parameter
+					if (['where', 'select', 'cursor'].includes(name)) {
+						return {
+							in: 'query',
+							name,
+							schema: {
+								type: 'object',
+								properties: (propSchema && typeof propSchema === 'object' && 'properties' in propSchema)
+									? (propSchema as { properties: Record<string, unknown> }).properties
+									: {},
+							},
+							style: 'deepObject',
+							explode: true,
+							description: `Pass a JSON object for ${name}`,
+						};
+					}
+					// For other params, keep default
+					return {
+						in: 'query',
+						name,
+						schema: propSchema,
+					};
+				},
+			);
+		}
+	}
+
+	if (bodyZod) {
+		operation.requestBody = {
+			content: getBodyContent(bodyZod),
+		};
+	}
 
 	return {
 		[path]: {
-			[method]: {
-				summary,
-				...(parameters.length ? { parameters } : {}),
-				...(requestBody ? { requestBody } : {}),
-				responses: openApiResponses,
-				...(secure ? { security: [{ ViewerCsrfToken: [] }] } : {}),
-			},
+			[method]: operation,
 		},
 	};
 }
