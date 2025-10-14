@@ -6,9 +6,10 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"dbaeumer.vscode-eslint",
 				"Prisma.prisma",
-				"orsenkucher.vscode-graphql"
+				"GraphQL.vscode-graphql",
+				"GraphQL.vscode-graphql-syntax",
+				"dbaeumer.vscode-eslint"
 			]
 		}
 	},

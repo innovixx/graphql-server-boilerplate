@@ -10,7 +10,7 @@
     "build": "pnpm generate:openapi && pnpm tsc && pnpm copyfiles",
     "serve": "node ./dist/index.js",
     "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
-    "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma'",
+    "db:migrate:main": "npx prisma migrate dev --schema './databases/maindb/schema.prisma' && npx tsx src/utils/convertPrismaToGql/index.ts ",
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
     "generate:openapi": "npx tsx src/bin/generateOpenApi.ts",

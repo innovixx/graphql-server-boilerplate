@@ -24,12 +24,17 @@ export default [
 		languageOptions: {
 			parser: graphqlPlugin.parser,
 		},
-		ignores: ['**/node_modules/**', 'src/graphql/schema.graphql'],
+		ignores: [
+			'**/node_modules/**',
+			'src/graphql/schema.graphql',
+			'src/graphql/typeDefs/database/**',
+		],
 		plugins: {
 			'@graphql-eslint': graphqlPlugin,
 		},
 		rules: {
 			'@graphql-eslint/no-anonymous-operations': 'error',
+			'eol-last': 'warn',
 			'@graphql-eslint/naming-convention': [
 				'error',
 				{
