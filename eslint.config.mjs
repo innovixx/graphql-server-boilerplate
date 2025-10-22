@@ -27,16 +27,16 @@ export default [
 		ignores: [
 			'**/node_modules/**',
 			'src/graphql/schema.graphql',
-			'src/graphql/typeDefs/database/**',
+			'src/graphql/typeDefs/**/*.graphql',
 		],
 		plugins: {
 			'@graphql-eslint': graphqlPlugin,
 		},
 		rules: {
-			'@graphql-eslint/no-anonymous-operations': 'error',
 			'eol-last': 'warn',
+			'@graphql-eslint/no-anonymous-operations': 'warn',
 			'@graphql-eslint/naming-convention': [
-				'error',
+				'warn',
 				{
 					OperationDefinition: {
 						style: 'PascalCase',

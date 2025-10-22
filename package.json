@@ -14,7 +14,7 @@
     "db:migrate:main:prod": "npx prisma migrate deploy --schema './databases/maindb/schema.prisma'",
     "db:reset": "npx prisma migrate reset --force --schema './databases/maindb/schema.prisma'",
     "generate:openapi": "npx tsx src/bin/generateOpenApi.ts",
-    "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/.graphql\" dist/",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/index.graphql\" dist/",
     "lint": "eslint ./src/**/*.{js,jsx,ts,tsx,graphql}",
     "lint-staged": "lint-staged --verbose",
     "prepare": "if [ -d node_modules/husky ]; then husky; fi"

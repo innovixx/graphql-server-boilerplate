@@ -1,10 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+type PrismaField = {
+	name: string;
+	type: string;
+	isList: boolean;
+	isRequired: boolean;
+};
+
+type PrismaModel = {
+	modelName: string;
+	fields: PrismaField[];
+};
+
+type PrismaEnum = {
+	enumName: string;
+	values: string[];
+};
 
 const PRISMA_TYPE_MAP = {
 	String: 'String',
@@ -15,16 +31,16 @@ const PRISMA_TYPE_MAP = {
 	Json: 'JSON',
 };
 
-function parsePrismaSchema(schema: string): { models: any[]; enums: any[] } {
-	const models: any[] = [];
-	const enums: any[] = [];
+function parsePrismaSchema(schema: string): { models: PrismaModel[]; enums: PrismaEnum[] } {
+	const models: PrismaModel[] = [];
+	const enums: PrismaEnum[] = [];
 	const modelRegex = /model\s+(\w+)\s*{([^}]*)}/g;
 	const enumRegex = /enum\s+(\w+)\s*{([^}]*)}/g;
 
 	let match = modelRegex.exec(schema);
 	while (match !== null) {
 		const [, modelName, body] = match;
-		const fields: any[] = [];
+		const fields: PrismaField[] = [];
 		body.split('\n').forEach((line) => {
 			const fieldMatch = line.trim().match(/^(\w+)\s+([\w[\]]+)(.*)/);
 			if (fieldMatch) {
@@ -66,7 +82,7 @@ function parsePrismaSchema(schema: string): { models: any[]; enums: any[] } {
 	return { models, enums };
 }
 
-function prismaToGraphQL(models: any[], enums: any[]): string {
+function prismaToGraphQL(models: PrismaModel[], enums: PrismaEnum[]): string {
 	const enumDefs = enums.map((e) => {
 		const values = e.values.map((v: string) => `  ${v}`).join('\n');
 		return `enum ${e.enumName} {\n${values}\n}`;
@@ -87,7 +103,7 @@ function prismaToGraphQL(models: any[], enums: any[]): string {
 }
 
 const prismaPath = path.join(__dirname, '../../../databases/maindb/schema.prisma');
-const graphqlPath = path.join(__dirname, '../../../src/graphql/typeDefs/database/.graphql');
+const graphqlPath = path.join(__dirname, '../../../src/graphql/typeDefs/database/index.graphql');
 
 const prismaSchema = fs.readFileSync(prismaPath, 'utf8');
 const { models, enums } = parsePrismaSchema(prismaSchema);
