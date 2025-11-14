@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { GraphQLResolveInfo } from 'graphql';
 import type { ResolveTree } from 'graphql-parse-resolve-info';
 import { parseResolveInfo } from 'graphql-parse-resolve-info';
@@ -16,8 +15,11 @@ export function getPrismaSelectFromInfo(
 		|| Object.keys(parsedInfo.fieldsByTypeName).length === 0
 	) return undefined;
 
-	function buildSelect(tree: ResolveTree, level: number): Record<string, any> {
-		const select: Record<string, any> = {};
+	function buildSelect(
+		tree: ResolveTree,
+		level: number,
+	): Record<string, boolean | { select: ReturnType<typeof buildSelect> }> {
+		const select: Record<string, boolean | { select: ReturnType<typeof buildSelect> }> = {};
 		if (level > (maxDepth || DB_SELECT_MAX_LEVEL)) return select;
 		// eslint-disable-next-line no-restricted-syntax
 		for (const [fieldName, fieldTree] of Object.entries(tree.fieldsByTypeName[Object.keys(tree.fieldsByTypeName)[0]])) {
@@ -47,7 +49,7 @@ export function getPrismaSelectFromInfo(
 		&& typeof select.items === 'object'
 		&& 'select' in select.items
 	) {
-		select = select.items.select as Record<string, unknown>;
+		select = select.items.select as Record<string, boolean | { select: ReturnType<typeof buildSelect> }>;
 	}
 
 	return select;

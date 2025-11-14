@@ -14,13 +14,12 @@ type OpenApiSchemaProps = {
 function getBodyContent(bodyZod: ZodType): Record<string, unknown> {
 	const { schema } = createSchema(bodyZod, { io: 'input', schemaComponents: {} });
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	function hasFileField(obj: any, path: string[] = []): boolean {
+	function hasFileField(obj: unknown, path: string[] = []): boolean {
 		if (obj && typeof obj === 'object') {
 			if ('properties' in obj && typeof obj.properties === 'object') {
 				// eslint-disable-next-line guard-for-in, no-restricted-syntax
 				for (const key in obj.properties) {
-					const prop = obj.properties[key];
+					const prop = (obj.properties as Record<string, unknown>)[key];
 					// Debug log for each property
 					if (
 						prop
