@@ -47,3 +47,7 @@ This GraphQL server boilerplate provides a basic structure for building servers.
 - `pnpm db:migrate:main`: Runs database migrations for the `maindb` schema using `npx prisma`.
 - `pnpm db:migrate:main:prod`: Runs database migrations for the `maindb` schema in production using `npx prisma`.
 - `pnpm db:reset`: Resets the database for the `maindb` schema using `npx prisma`.
+
+## Considerations
+
+ - Updating ESLint to version >= 10 causes incompatibility issues with eslint-react-plugin used under-the-hood by @innovixx/eslint-config. Version locked to the latest stable and compatible version.
