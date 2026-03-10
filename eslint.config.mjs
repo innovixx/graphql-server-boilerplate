@@ -20,6 +20,14 @@ export default [
 		],
 	},
 	{
+		files: ['prisma.config.ts'],
+		languageOptions: {
+			parserOptions: {
+				project: './tsconfig.prisma.json',
+			},
+		},
+	},
+	{
 		files: ['**/*.graphql'],
 		languageOptions: {
 			parser: graphqlPlugin.parser,

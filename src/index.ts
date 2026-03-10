@@ -5,7 +5,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
-import { expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@as-integrations/express5';
 import { ApolloServer } from '@apollo/server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import helmet from 'helmet';
@@ -54,7 +54,7 @@ const mount = async (app: Application): Promise<void> => {
 			'/api/graphql',
 			expressMiddleware(server, {
 				context: async ({ req, res }) => ({ req, res }),
-			}) as unknown as express.RequestHandler,
+			}),
 		);
 
 		httpServer.listen(process.env.PORT, () => {
