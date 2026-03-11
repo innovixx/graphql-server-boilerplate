@@ -50,7 +50,7 @@
   "devDependencies": {
     "@graphql-codegen/typescript": "^5.0.9",
     "@graphql-eslint/eslint-plugin": "^4.4.0",
-    "@innovixx/eslint-config": "^3.0.11",
+    "@innovixx/eslint-config": "^3.0.12",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
