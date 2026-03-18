@@ -2,9 +2,7 @@ import type { Test } from '../../../../databases/maindb/client/index.js';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { DB_RECORDS_DEFAULT_LIMIT, DB_RECORDS_MAX_LIMIT } from '../../../lib/constants.js';
 import { convertQuerySortToPrismaOrderBy } from '../../../utils/convertQuerySortToPrismaOrderBy/index.js';
-import { PaginatedDocsSchema, QueryParamsSchema, type EndpointHandler, type PaginatedDocs, type QueryParams } from '../../../lib/types.js';
-import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import { TestSchema } from '../../../zod/maindb/types/index.js';
+import { type EndpointHandler, type PaginatedDocs, type QueryParams } from '../../../lib/types.js';
 
 type Props = QueryParams
 
@@ -32,11 +30,3 @@ export const getTests: EndpointHandler<Props, PaginatedDocs<Test>> = async ({
 		total,
 	};
 };
-
-export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests/get-tests',
-	method: 'get',
-	summary: 'Get tests',
-	queryZod: QueryParamsSchema,
-	responseZod: PaginatedDocsSchema(TestSchema),
-});

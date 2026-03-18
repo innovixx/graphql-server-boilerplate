@@ -1,9 +1,7 @@
-import { z } from 'zod';
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import { UpdateTestInputSchema, type UpdateTestInput } from './types.js';
+import { type UpdateTestInput } from './types.js';
 
 type Props = UpdateTestInput
 
@@ -20,11 +18,3 @@ export const updateTest: EndpointHandler<Props, Test> = async ({ id, input }) =>
 
 	return item;
 };
-
-export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests/update-test',
-	method: 'put',
-	summary: 'Update a test',
-	bodyZod: UpdateTestInputSchema,
-	responseZod: z.boolean(),
-});

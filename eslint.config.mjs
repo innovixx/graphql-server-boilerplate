@@ -16,7 +16,6 @@ export default [
 			'databases',
 			'graphql.config.ts',
 			'schema.graphql',
-			'src/zod/maindb/types',
 		],
 	},
 	{

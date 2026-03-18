@@ -1,9 +1,5 @@
-import { z } from 'zod';
-
-export const CreateTestInputSchema = z.object({
-	input: z.object({
-		text: z.string(),
-	}),
-});
-
-export type CreateTestInput = z.infer<typeof CreateTestInputSchema>;
+export type CreateTestInput = {
+	input: {
+		text: string;
+	};
+}

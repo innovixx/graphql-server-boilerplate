@@ -6,5 +6,4 @@ onlyBuiltDependencies:
   - bcrypt
   - esbuild
   - prisma
-  - prisma-zod-generator
   - unrs-resolver

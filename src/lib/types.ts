@@ -1,58 +1,40 @@
 import type { Request, Response } from 'express';
-import { z } from 'zod';
 
 export const validOperators = [
 	'equals',
 	'contains',
 	'not_equals',
+	'has',
 	'in',
 	'not_in',
+	'not',
 	'exists',
-	'greater_than',
-	'greater_than_equal',
-	'less_than',
-	'less_than_equal',
+	'gt',
+	'gte',
+	'lt',
+	'lte',
 ] as const;
 
-export const OperatorSchema = z.enum(validOperators);
-export type Operator = z.infer<typeof OperatorSchema>;
+export type Operator = typeof validOperators[number];
 
-// eslint-disable-next-line no-use-before-define
-export const JsonArraySchema: z.ZodType<unknown[]> = z.lazy(() => z.array(JsonValueSchema));
-// eslint-disable-next-line no-use-before-define
-export const JsonObjectSchema: z.ZodType<object> = z.lazy(() => z.record(z.string(), JsonValueSchema));
-export const JsonValueSchema: z.ZodType<unknown> = z.lazy(() => z.union([JsonArraySchema, JsonObjectSchema, z.unknown()]));
+export type JsonValue = JsonArray | JsonObject | unknown;
+export type JsonArray = JsonValue[];
+export type JsonObject = { [key: string]: JsonValue };
 
-export type JsonValue = z.infer<typeof JsonValueSchema>;
-export type JsonArray = z.infer<typeof JsonArraySchema>;
-
-export const WhereFieldSchema = z.object(
-	Object.fromEntries(validOperators.map((op) => [op, JsonValueSchema.optional()])),
-);
-export type WhereField = z.infer<typeof WhereFieldSchema>;
-
+export type WhereField = Partial<Record<Operator, JsonValue | undefined>>;
 export type Where = Record<string, WhereField | Where[]>;
-export const WhereSchema = z.record(z.string(), z.union([WhereFieldSchema, z.array(z.any())]));
 
 export type SelectIncludeType = { [key: string]: true | SelectIncludeType };
-export const SelectIncludeTypeSchema: z.ZodType<SelectIncludeType> = z.lazy(() => z.record(z.string(), z.union([z.literal(true), SelectIncludeTypeSchema])));
 
-export const QueryParamsSchema = z.object({
-	limit: z.number().optional(),
-	offset: z.number().optional(),
-	sortBy: z.string().optional(),
-	where: WhereSchema.optional(),
-	select: SelectIncludeTypeSchema.optional(),
-});
-export type QueryParams = z.infer<typeof QueryParamsSchema>;
+export type QueryParams = {
+	limit?: number;
+	offset?: number;
+	sortBy?: string;
+	where?: Where;
+	select?: SelectIncludeType;
+};
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function PaginatedDocsSchema<T extends z.ZodTypeAny>(itemSchema: T) {
-	return z.object({
-		total: z.number(),
-		items: z.array(itemSchema),
-	});
-}
+
 export type PaginatedDocs<T> = {
 	total: number;
 	items: T[];

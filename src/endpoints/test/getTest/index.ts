@@ -1,9 +1,7 @@
 import type { Test } from '../../../../databases/maindb/client/index.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { PaginatedDocsSchema, type EndpointHandler } from '../../../lib/types.js';
-import { GetTestInputSchema, type GetTestInput } from './types.js';
-import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
-import { TestSchema } from '../../../zod/maindb/types/index.js';
+import { type EndpointHandler } from '../../../lib/types.js';
+import { type GetTestInput } from './types.js';
 
 type Props = GetTestInput
 
@@ -22,11 +20,3 @@ export const getTest: EndpointHandler<Props, Test> = async ({
 
 	return record;
 };
-
-export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests/get-test',
-	method: 'get',
-	summary: 'Get test',
-	queryZod: GetTestInputSchema,
-	responseZod: PaginatedDocsSchema(TestSchema),
-});

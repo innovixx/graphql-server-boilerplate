@@ -1,8 +1,6 @@
-import { z } from 'zod';
 import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
-import { DeleteTestInputSchema, type DeleteTestInput } from './types.js';
-import { buildOpenApiPath } from '../../../utils/buildOpenApiPath/index.js';
+import { type DeleteTestInput } from './types.js';
 
 type Props = DeleteTestInput
 
@@ -16,11 +14,3 @@ export const deleteTest: EndpointHandler<Props, Boolean> = async ({ id }: Props)
 
 	return true;
 };
-
-export const generateOpenApiSchema: Record<string, unknown> = buildOpenApiPath({
-	path: '/tests/delete-test',
-	method: 'delete',
-	summary: 'Delete a test',
-	bodyZod: DeleteTestInputSchema,
-	responseZod: z.boolean(),
-});
