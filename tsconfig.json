@@ -13,7 +13,6 @@
   "include": [
     "src",
     "*.d.ts",
-    "eslint.config.mjs",
   ],
   "exclude": [
     "node_modules",

@@ -14,15 +14,25 @@ export default [
 	{
 		ignores: [
 			'databases',
-			'graphql.config.ts',
 			'schema.graphql',
 		],
+		rules: {
+			'import/extensions': 'off',
+		},
 	},
 	{
 		files: ['prisma.config.ts'],
 		languageOptions: {
 			parserOptions: {
 				project: './tsconfig.prisma.json',
+			},
+		},
+	},
+	{
+		files: ['graphql.config.ts'],
+		languageOptions: {
+			parserOptions: {
+				project: './tsconfig.graphql.json',
 			},
 		},
 	},
@@ -55,11 +65,6 @@ export default [
 					},
 				},
 			],
-		},
-	},
-	{
-		rules: {
-			'import/extensions': 'off',
 		},
 	},
 ];
