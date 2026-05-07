@@ -5,11 +5,11 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
+import type { ExpressContextFunctionArgument } from '@as-integrations/express5';
 import { expressMiddleware } from '@as-integrations/express5';
-import { ApolloServer } from '@apollo/server';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { ApolloServer } from '@apollo/server';
 import helmet from 'helmet';
-import type { IResolvers } from '@graphql-tools/utils';
 import { logger } from './lib/logger/index.js';
 import { resolvers } from './graphql/resolvers.js';
 import { typeDefs } from './graphql/typeDefs.js';
@@ -22,7 +22,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const mount = async (app: Application): Promise<void> => {
 	try {
 		const schema = makeExecutableSchema({
-			resolvers: resolvers as IResolvers,
+			resolvers,
 			typeDefs,
 		});
 
@@ -53,7 +53,7 @@ const mount = async (app: Application): Promise<void> => {
 		app.use(
 			'/api/graphql',
 			expressMiddleware(server, {
-				context: async ({ req, res }) => ({ req, res }),
+				context: async ({ req, res }: ExpressContextFunctionArgument) => ({ req, res }),
 			}),
 		);
 
