@@ -21,6 +21,14 @@ export default [
 		},
 	},
 	{
+		files: ['eslint.config.mjs'],
+		languageOptions: {
+			parserOptions: {
+				project: null,
+			},
+		},
+	},
+	{
 		files: ['prisma.config.ts'],
 		languageOptions: {
 			parserOptions: {
