@@ -16,9 +16,6 @@ export default [
 			'databases',
 			'schema.graphql',
 		],
-		rules: {
-			'import/extensions': 'off',
-		},
 	},
 	{
 		files: ['eslint.config.mjs'],
@@ -73,6 +70,11 @@ export default [
 					},
 				},
 			],
+		},
+	},
+	{
+		rules: {
+			'import/extensions': 'off',
 		},
 	},
 ];
