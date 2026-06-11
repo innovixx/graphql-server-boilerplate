@@ -2,6 +2,7 @@ allowBuilds:
   '@apollo/protobufjs': true
   '@parcel/watcher': true
   '@prisma/engines': true
+  '@scarf/scarf': true
   bcrypt: true
   esbuild: true
   prisma: true

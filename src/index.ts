@@ -10,6 +10,10 @@ import { expressMiddleware } from '@as-integrations/express5';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { ApolloServer } from '@apollo/server';
 import helmet from 'helmet';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { readFileSync } from 'fs';
+import swaggerUi from 'swagger-ui-express';
 import { logger } from './lib/logger/index.js';
 import { resolvers } from './graphql/resolvers.js';
 import { typeDefs } from './graphql/typeDefs.js';
@@ -49,6 +53,10 @@ const mount = async (app: Application): Promise<void> => {
 		await server.start();
 
 		app.use('/api', endpointsRouter());
+
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		const openApiDoc = JSON.parse(readFileSync(join(__dirname, 'openapi.json'), 'utf-8')) as object;
+		app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
 		app.use(
 			'/api/graphql',

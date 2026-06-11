@@ -8,7 +8,6 @@ import { getTest } from './getTest/index.js';
 import { restHandler } from '../../utils/methodHandlers/restHandler/index.js';
 import { graphqlHandler } from '../../utils/methodHandlers/graphqlHandler/index.js';
 
-
 export const testsRouter = (): Router => {
 	const router = Router();
 

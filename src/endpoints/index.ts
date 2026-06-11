@@ -1,13 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Router } from 'express';
 import { testsRouter } from './test/index.js';
-import swaggerRouter from '../routes/swagger.js';
 
 export const endpointsRouter = (): Router => {
 	const router = Router();
 
 	if (process.env.NODE_ENV !== 'production') {
-		router.use('/', swaggerRouter);
 		router.use('/tests', testsRouter());
 	}
 

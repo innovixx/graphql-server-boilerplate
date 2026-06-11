@@ -7,14 +7,14 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
-    "build": "pnpm tsc && pnpm copyfiles",
+    "build": "pnpm tsc && pnpm generate:openapi && pnpm copyfiles",
     "serve": "node ./dist/index.js",
     "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
     "codegen": "graphql-codegen --config codegen.ts",
     "db:migrate:main": "npx prisma migrate dev && npx prisma generate",
     "db:migrate:main:prod": "npx prisma migrate deploy",
     "db:reset": "npx prisma migrate reset --force",
-    "generate:openapi": "npx tsx src/bin/generateOpenApi.ts",
+    "generate:openapi": "npx tsx src/bin/generateOpenApi/index.ts",
     "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/index.graphql\" dist/",
     "lint": "eslint ./src/**/*.{js,jsx,ts,tsx,graphql}",
     "lint-staged": "lint-staged --verbose",
@@ -46,7 +46,8 @@
     "lodash.merge": "^4.6.2",
     "prisma": "^7.8.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@graphql-codegen/typescript": "^6.0.1",
@@ -62,6 +63,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/serve-static": "2.2.0",
+    "@types/swagger-ui-express": "^4.1.8",
     "copyfiles": "^2.4.1",
     "eslint": "9.39.4",
     "husky": "^9.1.7",
