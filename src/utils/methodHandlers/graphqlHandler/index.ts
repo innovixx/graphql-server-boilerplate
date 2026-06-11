@@ -1,44 +1,31 @@
 import type { Request, Response } from 'express';
 import type { GraphQLResolveInfo } from 'graphql';
 import type { EndpointHandler } from '../../../lib/types.js';
-import { convertGraphqlWhereToRestWhere } from '../../convertGraphqlWhereToRestWhere/index.js';
 import { getPrismaSelectFromInfo } from '../parsePrismaSelectFromInfo/index.js';
 
-export const graphqlHandler = <
-  Params = unknown,
-  Result = unknown
->(
-		getFn: EndpointHandler<Params, Result>,
-		maxDepth?: number,
-	) => async (
-		_: unknown,
-		args: Params & { where?: Record<string, unknown>; cursor?: unknown; [key: string]: unknown },
-		context: { req: Request; res: Response },
-		info?: GraphQLResolveInfo,
-	): Promise<NonNullable<Result>> => {
-		const req = context?.req;
-		const res = context?.res;
 
-		let result: Result | void;
+export const graphqlHandler = <T, R>(getFn: EndpointHandler<T, R>) => async (_: unknown, args: unknown, context: { req: Request; res: Response }, info?: GraphQLResolveInfo): Promise<R | void> => {
+	const req = context?.req;
+	const res = context?.res;
 
-		if (info && info.operation.operation === 'query') {
-			const select = info ? getPrismaSelectFromInfo(info, maxDepth) : undefined;
+	let result;
 
-			const params = {
-				...(typeof args === 'object' && args !== null ? args : {}),
-				where: convertGraphqlWhereToRestWhere(args.where ?? {}),
-				cursor: args.cursor,
-				select,
-			} as Params;
+	if (info?.operation.operation === 'query') {
+		const select = info ? getPrismaSelectFromInfo(info) : undefined;
+		const parsedArgs = typeof args === 'object' && args !== null
+			? args as Record<string, unknown>
+			: {};
 
-			result = await getFn(params, req, res);
-		} else {
-			result = await getFn(args, req, res);
-		}
+		const params = {
+			...parsedArgs,
+			cursor: parsedArgs.cursor,
+			select,
+		};
 
-		if (result === undefined || result === null) {
-			throw new Error('Handler did not return a result');
-		}
+		result = getFn(params as T, req, res);
+	} else {
+		result = getFn(args as T, req, res);
+	}
 
-		return result as NonNullable<Result>;
-	};
+	return result;
+};

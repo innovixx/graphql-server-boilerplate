@@ -25,6 +25,7 @@ export type WhereField = Partial<Record<Operator, JsonValue | undefined>>;
 export type Where = Record<string, WhereField | Where[]>;
 
 export type SelectIncludeType = { [key: string]: true | SelectIncludeType };
+export type SelectWhitelistType = { [key: string]: true | 'ignoreScalar' | SelectWhitelistType };
 
 export type QueryParams = {
 	limit?: number;

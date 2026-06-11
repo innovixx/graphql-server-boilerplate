@@ -1,11 +1,9 @@
 import type { GraphQLResolveInfo } from 'graphql';
 import type { ResolveTree } from 'graphql-parse-resolve-info';
 import { parseResolveInfo } from 'graphql-parse-resolve-info';
-import { DB_SELECT_MAX_LEVEL } from '../../../lib/constants.js';
 
 export function getPrismaSelectFromInfo(
 	info: GraphQLResolveInfo,
-	maxDepth?: number,
 ): unknown {
 	const parsedInfo = parseResolveInfo(info);
 
@@ -15,23 +13,15 @@ export function getPrismaSelectFromInfo(
 		|| Object.keys(parsedInfo.fieldsByTypeName).length === 0
 	) return undefined;
 
-	function buildSelect(
-		tree: ResolveTree,
-		level: number,
-	): Record<string, boolean | { select: ReturnType<typeof buildSelect> }> {
-		const select: Record<string, boolean | { select: ReturnType<typeof buildSelect> }> = {};
-		if (level > (maxDepth || DB_SELECT_MAX_LEVEL)) return select;
+	function buildSelect(tree: ResolveTree): Record<string, unknown> {
+		const select: Record<string, unknown> = {};
 		// eslint-disable-next-line no-restricted-syntax
 		for (const [fieldName, fieldTree] of Object.entries(tree.fieldsByTypeName[Object.keys(tree.fieldsByTypeName)[0]])) {
 			if (
 				fieldTree.fieldsByTypeName
 				&& Object.keys(fieldTree.fieldsByTypeName).length > 0
 			) {
-				if (level < (maxDepth || DB_SELECT_MAX_LEVEL)) {
-					select[fieldName] = { select: buildSelect(fieldTree, level + 1) };
-				} else {
-					throw new Error(`Exceeded maximum nested select level (${(maxDepth || DB_SELECT_MAX_LEVEL)}).`);
-				}
+				select[fieldName] = { select: buildSelect(fieldTree) };
 			} else {
 				select[fieldName] = true;
 			}
@@ -39,7 +29,7 @@ export function getPrismaSelectFromInfo(
 		return select;
 	}
 
-	let select = buildSelect(parsedInfo as ResolveTree, 0);
+	let select = buildSelect(parsedInfo as ResolveTree);
 
 	if (
 		select
@@ -49,7 +39,7 @@ export function getPrismaSelectFromInfo(
 		&& typeof select.items === 'object'
 		&& 'select' in select.items
 	) {
-		select = select.items.select as Record<string, boolean | { select: ReturnType<typeof buildSelect> }>;
+		select = select.items.select as Record<string, unknown>;
 	}
 
 	return select;
