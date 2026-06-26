@@ -8,6 +8,22 @@ const isValidSelectLeaf = (value: unknown): value is true | Record<string, unkno
 	value === true || isRecord(value)
 );
 
+// Recursively coerces "true" strings to booleans and wraps nested objects in { select: ... }
+// Used when whitelistValue === true (all nested fields are allowed without restriction)
+const coerceSelectValues = (obj: Record<string, unknown>): Record<string, unknown> => {
+	const result: Record<string, unknown> = {};
+	Object.entries(obj).forEach(([key, rawValue]) => {
+		const value = rawValue === 'true' ? true : rawValue;
+		if (value === true) {
+			result[key] = true;
+		} else if (isRecord(value)) {
+			const nested = isRecord(value.select) ? value.select : value;
+			result[key] = { select: coerceSelectValues(nested) };
+		}
+	});
+	return result;
+};
+
 type SelectValidationResult = {
 	sanitizedSelect?: Record<string, unknown>;
 	forbiddenPaths: string[];
@@ -22,7 +38,8 @@ const validateSelect = (
 	const forbiddenPaths: string[] = [];
 	const isRootLevel = path.length === 0;
 
-	Object.entries(requestedSelect).forEach(([key, value]) => {
+	Object.entries(requestedSelect).forEach(([key, rawValue]) => {
+		const value = rawValue === 'true' ? true : rawValue;
 		const nextPath = [...path, key];
 		const whitelistValue = selectWhitelist[key];
 
@@ -45,7 +62,8 @@ const validateSelect = (
 		}
 
 		if (whitelistValue === true) {
-			sanitizedSelect[key] = value;
+			const nested = isRecord(value.select) ? value.select : value;
+			sanitizedSelect[key] = { select: coerceSelectValues(nested) };
 			return;
 		}
 
@@ -62,9 +80,7 @@ const validateSelect = (
 
 		if (!nestedResult.sanitizedSelect) return;
 
-		sanitizedSelect[key] = isRecord(value.select)
-			? { select: nestedResult.sanitizedSelect }
-			: nestedResult.sanitizedSelect;
+		sanitizedSelect[key] = { select: nestedResult.sanitizedSelect };
 	});
 
 	return {
@@ -79,7 +95,7 @@ export const sanitizeWhitelistedSelect = (
 ): SelectIncludeType | undefined => {
 	if (!select) return undefined;
 	if (!isRecord(select)) {
-		throw new Error('Invalid select object');
+		throw new Error(`Invalid select type: expected an object, but received ${typeof select}`);
 	}
 
 	const { sanitizedSelect, forbiddenPaths } = validateSelect(select, whitelist);
