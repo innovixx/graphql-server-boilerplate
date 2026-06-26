@@ -7,15 +7,14 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
-    "build": "pnpm tsc && pnpm generate:openapi && pnpm copyfiles",
+    "build": "pnpm generate:openapi && pnpm tsc && pnpm copyfiles",
     "serve": "node ./dist/index.js",
     "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
-    "codegen": "graphql-codegen --config codegen.ts",
     "db:migrate:main": "npx prisma migrate dev && npx prisma generate",
     "db:migrate:main:prod": "npx prisma migrate deploy",
     "db:reset": "npx prisma migrate reset --force",
     "generate:openapi": "npx tsx src/bin/generateOpenApi/index.ts",
-    "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/index.graphql\" dist/",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.json\" \"src/**/.graphql\" \"src/**/*.png\" dist/",
     "lint": "eslint ./src/**/*.{js,jsx,ts,tsx,graphql}",
     "lint-staged": "lint-staged --verbose",
     "prepare": "if [ -d node_modules/husky ]; then husky; fi"

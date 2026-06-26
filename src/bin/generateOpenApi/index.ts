@@ -35,6 +35,7 @@ interface RouteEntry {
 	handlerFile: string; // relative to ROOT
 	handlerExport: string;
 	tags: string[];
+	requiresAuth: boolean;
 }
 
 interface MountedRouter {
@@ -134,6 +135,86 @@ function extractHandlerExport(node: ts.Expression): string | null {
 	}
 
 	return null;
+}
+
+function getAuthorizeImportNames(sf: ts.SourceFile): Set<string> {
+	const importNames = new Set<string>();
+
+	for (const statement of sf.statements) {
+		if (!ts.isImportDeclaration(statement)) continue;
+		if (!ts.isStringLiteral(statement.moduleSpecifier)) continue;
+
+		const modulePath = statement.moduleSpecifier.text;
+		if (!modulePath.includes('/lib/authorize/')) continue;
+
+		const importClause = statement.importClause;
+		if (!importClause?.namedBindings || !ts.isNamedImports(importClause.namedBindings)) continue;
+
+		for (const element of importClause.namedBindings.elements) {
+			const importedName = element.propertyName?.text ?? element.name.text;
+			if (importedName === 'authorize') {
+				importNames.add(element.name.text);
+			}
+		}
+	}
+
+	return importNames;
+}
+
+function findExportedHandlerFunctionBody(sf: ts.SourceFile, handlerExport: string): ts.ConciseBody | null {
+	for (const stmt of sf.statements) {
+		if (!ts.isVariableStatement(stmt)) continue;
+		for (const decl of stmt.declarationList.declarations) {
+			if (!ts.isIdentifier(decl.name) || decl.name.text !== handlerExport || !decl.initializer) continue;
+			if (ts.isArrowFunction(decl.initializer) || ts.isFunctionExpression(decl.initializer)) {
+				return decl.initializer.body;
+			}
+		}
+	}
+
+	return null;
+}
+
+function containsViewerFromAuthorize(node: ts.Node, authorizeNames: Set<string>): boolean {
+	let found = false;
+
+	const visit = (current: ts.Node): void => {
+		if (found) return;
+
+		if (ts.isVariableDeclaration(current)
+			&& ts.isIdentifier(current.name)
+			&& current.name.text === 'viewer'
+			&& current.initializer) {
+			let init: ts.Expression = current.initializer;
+			if (ts.isAwaitExpression(init)) {
+				init = init.expression;
+			}
+
+			if (ts.isCallExpression(init) && ts.isIdentifier(init.expression) && authorizeNames.has(init.expression.text)) {
+				found = true;
+				return;
+			}
+		}
+
+		ts.forEachChild(current, visit);
+	};
+
+	visit(node);
+	return found;
+}
+
+function handlerUsesViewerFromAuthorize(handlerFile: string, handlerExport: string): boolean {
+	const handlerAbsPath = resolve(ROOT, handlerFile);
+	const sf = readSourceFile(handlerAbsPath);
+	if (!sf) return false;
+
+	const authorizeNames = getAuthorizeImportNames(sf);
+	if (!authorizeNames.size) return false;
+
+	const handlerBody = findExportedHandlerFunctionBody(sf, handlerExport);
+	if (!handlerBody) return false;
+
+	return containsViewerFromAuthorize(handlerBody, authorizeNames);
 }
 
 function parseMountedRouters(): MountedRouter[] {
@@ -236,6 +317,7 @@ function parseRoutesFromMountedRouter(mountedRouter: MountedRouter): RouteEntry[
 			handlerFile,
 			handlerExport,
 			tags: mountedRouter.tags,
+			requiresAuth: handlerUsesViewerFromAuthorize(handlerFile, handlerExport),
 		});
 
 		ts.forEachChild(node, visit);
@@ -502,7 +584,19 @@ function buildObjectOrEnumSchema(symbol: ts.Symbol, type: ts.Type, depth: number
 
 function buildPropertiesSchema(type: ts.Type, depth: number): object {
 	const props = checker.getPropertiesOfType(type);
-	if (!props.length) return { type: 'object' };
+
+	// Handle index-signature types (e.g. Record<string, V>, { [key: string]: V })
+	// that have no named properties.
+	if (!props.length) {
+		const indexInfo = checker.getIndexInfoOfType(type, ts.IndexKind.String);
+		if (indexInfo) {
+			return {
+				type: 'object',
+				additionalProperties: typeToSchema(indexInfo.type, depth + 1),
+			};
+		}
+		return { type: 'object' };
+	}
 
 	const properties: Record<string, object> = {};
 	const required: string[] = [];
@@ -530,14 +624,124 @@ function buildPropertiesSchema(type: ts.Type, depth: number): object {
 	};
 }
 
+function unwrapPaginatedItemType(type: ts.Type): ts.Type | null {
+	const itemsProp = checker.getPropertiesOfType(type).find((prop) => prop.getName() === 'items');
+	if (!itemsProp) return null;
+
+	const pDecl = itemsProp.valueDeclaration ?? itemsProp.declarations?.[0];
+	if (!pDecl) return null;
+
+	const itemsType = checker.getTypeOfSymbolAtLocation(itemsProp, pDecl);
+	if (!checker.isArrayType(itemsType)) return null;
+
+	const args = checker.getTypeArguments(itemsType as ts.TypeReference);
+	return args[0] ?? null;
+}
+
+function unwrapNullableType(type: ts.Type): ts.Type {
+	if (!type.isUnion()) return type;
+	const nonNull = type.types.filter((t) => !(t.flags & (ts.TypeFlags.Null | ts.TypeFlags.Undefined)));
+	return nonNull[0] ?? type;
+}
+
+function isNestedSelectableType(type: ts.Type): boolean {
+	const unwrapped = unwrapNullableType(type);
+	if (checker.isArrayType(unwrapped)) {
+		const args = checker.getTypeArguments(unwrapped as ts.TypeReference);
+		return isNestedSelectableType(args[0] ?? unwrapped);
+	}
+
+	if (unwrapped.flags & (
+		ts.TypeFlags.String
+		| ts.TypeFlags.Number
+		| ts.TypeFlags.Boolean
+		| ts.TypeFlags.BigInt
+		| ts.TypeFlags.StringLiteral
+		| ts.TypeFlags.NumberLiteral
+		| ts.TypeFlags.BooleanLiteral
+		| ts.TypeFlags.Null
+		| ts.TypeFlags.Undefined
+		| ts.TypeFlags.Void
+		| ts.TypeFlags.Never
+		| ts.TypeFlags.Any
+		| ts.TypeFlags.Unknown
+	)) {
+		return false;
+	}
+
+	const symbolName = unwrapped.symbol?.getName() ?? unwrapped.aliasSymbol?.getName();
+	if (symbolName === 'Date' || symbolName === 'String' || symbolName === 'Number' || symbolName === 'Boolean') {
+		return false;
+	}
+
+	return checker.getPropertiesOfType(unwrapped).some((prop) => {
+		const name = prop.getName();
+		return !name.startsWith('_') && !name.startsWith('$');
+	});
+}
+
+function buildSelectSchema(type: ts.Type, depth = 0): object {
+	if (depth > 10) return { type: 'object' };
+
+	const unwrapped = unwrapNullableType(type);
+	if (checker.isArrayType(unwrapped)) {
+		const args = checker.getTypeArguments(unwrapped as ts.TypeReference);
+		return buildSelectSchema(args[0] ?? unwrapped, depth + 1);
+	}
+
+	const symbol = unwrapped.aliasSymbol ?? unwrapped.getSymbol();
+	if (!symbol) {
+		return { type: 'boolean' };
+	}
+
+	const props = checker.getPropertiesOfType(unwrapped);
+	if (!props.length) {
+		return { type: 'boolean' };
+	}
+
+	const properties: Record<string, object> = {};
+	for (const prop of props) {
+		const name = prop.getName();
+		if (name.startsWith('_') || name.startsWith('$')) continue;
+
+		const pDecl = prop.valueDeclaration ?? prop.declarations?.[0];
+		if (!pDecl) continue;
+
+		const propType = checker.getTypeOfSymbolAtLocation(prop, pDecl);
+		const nextType = unwrapNullableType(propType);
+		const nextSchema = buildSelectSchema(nextType, depth + 1);
+
+		properties[name] = isNestedSelectableType(nextType)
+			? { anyOf: [{ type: 'boolean' }, nextSchema] }
+			: { type: 'boolean' };
+	}
+
+	return {
+		type: 'object',
+		properties,
+	};
+}
+
 // Expand an input type into OpenAPI query parameters
-function buildQueryParameters(inputType: ts.Type): object[] {
+function buildQueryParameters(inputType: ts.Type, outputType: ts.Type): object[] {
 	const props = checker.getPropertiesOfType(inputType);
 	return props.flatMap((prop) => {
 		const pDecl = prop.valueDeclaration ?? prop.declarations?.[0];
 		if (!pDecl) return [];
 		const propType = checker.getTypeOfSymbolAtLocation(prop, pDecl);
 		const isOptional = !!(prop.flags & ts.SymbolFlags.Optional);
+
+		if (prop.getName() === 'select') {
+			const itemType = unwrapPaginatedItemType(outputType) ?? outputType;
+			return [{
+				in: 'query',
+				name: prop.getName(),
+				required: !isOptional,
+				style: 'deepObject',
+				explode: true,
+				schema: buildSelectSchema(itemType),
+			}];
+		}
 
 		// Complex types (objects, arrays) are JSON-serialised as strings when
 		// passed as query parameters.
@@ -571,7 +775,6 @@ for (const route of routes) {
 	const operation: Record<string, unknown> = {
 		tags: route.tags,
 		operationId: route.handlerExport,
-		security: [{ bearerAuth: [] }],
 		responses: {
 			200: {
 				description: 'Success',
@@ -583,9 +786,13 @@ for (const route of routes) {
 		},
 	};
 
+	if (route.requiresAuth) {
+		operation.security = [{ apiKeyAuth: [] }];
+	}
+
 	if (route.method === 'GET') {
 		if (inputType) {
-			operation.parameters = buildQueryParameters(inputType);
+			operation.parameters = buildQueryParameters(inputType, outputType);
 		}
 	} else {
 		// POST / DELETE with body
@@ -605,6 +812,69 @@ for (const route of routes) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// MANUAL SCHEMA OVERRIDES
+// Some types (index-signature records, recursive types) cannot be accurately
+// inferred from the TypeScript compiler API and must be defined by hand.
+// ─────────────────────────────────────────────────────────────────────────────
+
+definitions.WhereField = {
+	type: 'object',
+	description: 'Filter operators for a single field.',
+	properties: {
+		equals: { description: 'Exact match.' },
+		contains: { type: 'string', description: 'String contains (use with mode: insensitive for case-insensitive).' },
+		not_equals: { description: 'Not equal to value.' },
+		has: { description: 'Array contains value.' },
+		in: { type: 'array', items: {}, description: 'Value is in the provided list.' },
+		not_in: { type: 'array', items: {}, description: 'Value is not in the provided list.' },
+		not: { description: 'Negation.' },
+		exists: { type: 'boolean', description: 'Field exists (is not null).' },
+		gt: { description: 'Greater than.' },
+		gte: { description: 'Greater than or equal.' },
+		lt: { description: 'Less than.' },
+		lte: { description: 'Less than or equal.' },
+		mode: { type: 'string', enum: ['default', 'insensitive'], description: 'String comparison mode.' },
+	},
+};
+
+// Relation filters — wraps a nested Where for to-many or to-one relations.
+definitions.RelationFilter = {
+	type: 'object',
+	description: 'Filter on a related record. Use to-many keys (some/every/none) or to-one keys (is/isNot).',
+	properties: {
+		some: { $ref: '#/components/schemas/Where', description: 'At least one related record matches.' },
+		every: { $ref: '#/components/schemas/Where', description: 'Every related record matches.' },
+		none: { $ref: '#/components/schemas/Where', description: 'No related record matches.' },
+		is: { $ref: '#/components/schemas/Where', description: 'The related record matches (to-one).' },
+		isNot: { $ref: '#/components/schemas/Where', description: 'The related record does not match (to-one).' },
+	},
+};
+
+definitions.Where = {
+	type: 'object',
+	description: 'Prisma-style where clause. Keys are field names; values are a WhereField (scalar filter), a RelationFilter (nested relation), or logical AND/OR arrays.',
+	properties: {
+		AND: {
+			type: 'array',
+			items: { $ref: '#/components/schemas/Where' },
+			description: 'All conditions must match.',
+		},
+		OR: {
+			type: 'array',
+			items: { $ref: '#/components/schemas/Where' },
+			description: 'At least one condition must match.',
+		},
+	},
+	additionalProperties: {
+		anyOf: [
+			{ $ref: '#/components/schemas/WhereField' },
+			{ $ref: '#/components/schemas/RelationFilter' },
+			{ type: 'array', items: { $ref: '#/components/schemas/Where' } },
+		],
+	},
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // ASSEMBLE + WRITE
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -621,11 +891,11 @@ const openApiDoc = {
 	components: {
 		schemas: definitions,
 		securitySchemes: {
-			bearerAuth: {
-				type: 'http',
-				scheme: 'bearer',
-				bearerFormat: 'JWT',
-				description: 'Signed session token issued at /api/auth/login',
+			apiKeyAuth: {
+				type: 'apiKey',
+				in: 'header',
+				name: 'X-API-KEY',
+				description: 'API key provided in the X-API-KEY header',
 			},
 		},
 	},
@@ -636,5 +906,5 @@ writeFileSync(outPath, JSON.stringify(openApiDoc, null, 2));
 
 const pathCount = Object.keys(paths).length;
 const schemaCount = Object.keys(definitions).length;
-console.log('✅  Generated src/openapi.json');
-console.log(`    ${pathCount} paths  |  ${schemaCount} component schemas  |  ${skipped} skipped`);
+console.warn('✅  Generated src/openapi.json');
+console.warn(`    ${pathCount} paths  |  ${schemaCount} component schemas  |  ${skipped} skipped`);

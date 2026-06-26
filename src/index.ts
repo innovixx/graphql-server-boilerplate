@@ -54,16 +54,16 @@ const mount = async (app: Application): Promise<void> => {
 
 		app.use('/api', endpointsRouter());
 
-		const __dirname = dirname(fileURLToPath(import.meta.url));
-		const openApiDoc = JSON.parse(readFileSync(join(__dirname, 'openapi.json'), 'utf-8')) as object;
-		app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDoc));
-
 		app.use(
 			'/api/graphql',
 			expressMiddleware(server, {
 				context: async ({ req, res }: ExpressContextFunctionArgument) => ({ req, res }),
 			}),
 		);
+
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		const openApiDoc = JSON.parse(readFileSync(join(__dirname, 'openapi.json'), 'utf-8')) as object;
+		app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDoc));
 
 		httpServer.listen(process.env.PORT, () => {
 			logger.info(`Server is running on port ${process.env.PORT}`);
