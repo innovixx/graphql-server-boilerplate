@@ -18,26 +18,10 @@ export default [
 		],
 	},
 	{
-		files: ['eslint.config.mjs'],
+		files: ['*.config.ts'],
 		languageOptions: {
 			parserOptions: {
 				project: null,
-			},
-		},
-	},
-	{
-		files: ['prisma.config.ts'],
-		languageOptions: {
-			parserOptions: {
-				project: './tsconfig.prisma.json',
-			},
-		},
-	},
-	{
-		files: ['graphql.config.ts'],
-		languageOptions: {
-			parserOptions: {
-				project: './tsconfig.graphql.json',
 			},
 		},
 	},
