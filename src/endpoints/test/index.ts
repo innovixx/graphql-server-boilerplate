@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import type { IResolvers } from '@graphql-tools/utils';
+import { graphqlHandler, restHandler } from '@innovixx/api-kit';
 import { getTests } from './getTests/index.js';
 import { createTest } from './createTest/index.js';
 import { updateTest } from './updateTest/index.js';
 import { deleteTest } from './deleteTest/index.js';
 import { getTest } from './getTest/index.js';
-import { restHandler } from '../../utils/methodHandlers/restHandler/index.js';
-import { graphqlHandler } from '../../utils/methodHandlers/graphqlHandler/index.js';
 
 export const testsRouter = (): Router => {
 	const router = Router();

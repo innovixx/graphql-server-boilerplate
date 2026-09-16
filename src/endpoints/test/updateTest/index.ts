@@ -1,5 +1,5 @@
+import { type EndpointHandler } from '@innovixx/api-kit';
 import type { Test } from '../../../../databases/maindb/client/index.js';
-import type { EndpointHandler } from '../../../lib/types.js';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { type UpdateTestInput } from './types.js';
 
