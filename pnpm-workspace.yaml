@@ -7,12 +7,4 @@ allowBuilds:
   esbuild: true
   prisma: true
   unrs-resolver: true
-onlyBuiltDependencies:
-  - '@apollo/protobufjs'
-  - '@parcel/watcher'
-  - '@prisma/client'
-  - '@prisma/engines'
-  - bcrypt
-  - esbuild
-  - prisma
-  - unrs-resolver
+  workerd: true
