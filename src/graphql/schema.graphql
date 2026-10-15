@@ -1,0 +1,129 @@
+directive @inherits(type: String!) on OBJECT
+
+scalar Date
+
+scalar JSON
+
+scalar Upload
+
+interface PaginatedDocs {
+  total: Int!
+}
+
+enum WhereFieldMode {
+  default
+  insensitive
+}
+
+type PaginatedTests implements PaginatedDocs {
+  total: Int!
+  items: [Test!]
+}
+
+input CreateTestInput {
+  text: String!
+}
+
+type Query {
+  tests(limit: Int, offset: Int, where: Where, sortBy: String): PaginatedTests!
+  test(id: String!): Test!
+}
+
+type Mutation {
+  createTest(input: CreateTestInput): Test!
+  updateTest(id: String!, input: CreateTestInput): Test!
+  deleteTest(id: String!): Boolean!
+}
+
+type Test {
+  id: String!
+  text: String!
+  createdAt: Date!
+  updatedAt: Date!
+}
+
+input WhereField {
+  equals: JSON
+  contains: JSON
+  not_equals: JSON
+  in: JSON
+  not_in: JSON
+  exists: JSON
+  gt: JSON
+  gte: JSON
+  lt: JSON
+  lte: JSON
+  mode: WhereFieldMode
+}
+
+input RelationWhere {
+  some: Where
+  every: Where
+  none: Where
+  is: Where
+  isNot: Where
+}
+
+input Where {
+  and: [Where]
+  or: [Where]
+  field: String
+  value: WhereField
+  relation: RelationWhere
+}
+
+input StringFilter {
+  equals: String
+  not_equals: String
+  contains: String
+  in: [String!]
+  not_in: [String!]
+  exists: Boolean
+  mode: WhereFieldMode
+}
+
+input DateFilter {
+  equals: Date
+  not_equals: Date
+  in: [Date!]
+  not_in: [Date!]
+  exists: Boolean
+  gt: Date
+  gte: Date
+  lt: Date
+  lte: Date
+}
+
+input TestScalarWhereInput {
+  AND: [TestScalarWhereInput!]
+  OR: [TestScalarWhereInput!]
+  id: StringFilter
+  text: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+}
+
+input TestRelationFilter {
+  is: TestScalarWhereInput
+  isNot: TestScalarWhereInput
+}
+
+input TestListRelationFilter {
+  some: TestScalarWhereInput
+  every: TestScalarWhereInput
+  none: TestScalarWhereInput
+}
+
+input TestWhereInput {
+  AND: [TestWhereInput!]
+  OR: [TestWhereInput!]
+  id: StringFilter
+  text: StringFilter
+  createdAt: DateFilter
+  updatedAt: DateFilter
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

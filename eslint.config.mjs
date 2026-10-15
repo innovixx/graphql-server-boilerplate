@@ -16,6 +16,7 @@ export default [
 		ignores: [
 			'databases',
 			'schema.graphql',
+			'src/lib/generated/**/*.ts',
 		],
 	},
 	{
