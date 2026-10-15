@@ -9,7 +9,7 @@
     "dev": "nodemon --exec tsx src/index.ts",
     "build": "pnpm generate:openapi && pnpm tsc && pnpm copyfiles",
     "serve": "node ./dist/index.js",
-    "cleanDev": "pnpm db:reset && tsx ./src/seed/index.ts && pnpm dev",
+    "cleanDev": "pnpm db:reset && pnpm generate:openapi && tsx ./src/seed/index.ts && pnpm dev",
     "db:migrate:main": "npx prisma migrate dev && npx prisma generate",
     "db:migrate:main:prod": "npx prisma migrate deploy",
     "db:reset": "npx prisma migrate reset --force",

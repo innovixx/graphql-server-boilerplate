@@ -1,4 +1,4 @@
-import type { EndpointHandler } from '../../../lib/types.js';
+import type { EndpointHandler } from '@innovixx/api-kit';
 import { maindb } from '../../../prisma/maindb/index.js';
 import { type DeleteTestInput } from './types.js';
 
