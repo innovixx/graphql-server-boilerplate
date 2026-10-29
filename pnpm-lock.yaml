@@ -30,8 +30,8 @@ importers:
         specifier: ^12.0.4
         version: 12.0.4(graphql@17.0.2)
       '@innovixx/api-kit':
-        specifier: ^0.0.18
-        version: 0.0.18(express@5.3.0(supports-color@5.5.0))(graphql@17.0.2)(supports-color@5.5.0)(typescript@6.0.3)
+        specifier: ^0.1.0
+        version: 0.1.0(express@5.3.0(supports-color@5.5.0))(graphql@17.0.2)(supports-color@5.5.0)(typescript@6.0.3)
       '@innovixx/prisma-gql-generator':
         specifier: ^0.0.7
         version: 0.0.7(magicast@0.5.5)(prisma@7.10.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(magicast@0.5.5)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3))(typescript@6.0.3)
@@ -896,8 +896,8 @@ packages:
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
 
-  '@innovixx/api-kit@0.0.18':
-    resolution: {integrity: sha512-CpvOLxkRdIHgIKK8riD38D2xx6yqq/K86r3njrXEMJeW63vXV86TU/plGr6FB/OnesPXD/mDkSdwIEKa9/Txeg==, tarball: https://npm.pkg.github.com/download/@innovixx/api-kit/0.0.18/02773467f1c8ba9b6289c7c59d8c88e71a71660d}
+  '@innovixx/api-kit@0.1.0':
+    resolution: {integrity: sha512-/BEjOQsdMhTGo2EmAoPD1OKZeIwZkztZRvOpeX+/Hip6boxMGFOm8JHdkqelPXu6dNpyEotRDMJu77iInYuA6Q==, tarball: https://npm.pkg.github.com/download/@innovixx/api-kit/0.1.0/dbd6ff2d9a258432e1748810c5202179d402da4f}
     peerDependencies:
       express: '>=5'
       graphql: '>=16'
@@ -5328,7 +5328,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@innovixx/api-kit@0.0.18(express@5.3.0(supports-color@5.5.0))(graphql@17.0.2)(supports-color@5.5.0)(typescript@6.0.3)':
+  '@innovixx/api-kit@0.1.0(express@5.3.0(supports-color@5.5.0))(graphql@17.0.2)(supports-color@5.5.0)(typescript@6.0.3)':
     dependencies:
       '@graphql-tools/load-files': 7.0.1(graphql@17.0.2)
       '@graphql-tools/merge': 9.2.7(graphql@17.0.2)
