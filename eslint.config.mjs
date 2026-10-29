@@ -44,6 +44,7 @@ export default [
 			'eol-last': 'warn',
 			'@graphql-eslint/no-anonymous-operations': 'warn',
 			'@graphql-eslint/known-type-names': 'error',
+			'@graphql-eslint/no-duplicate-fields': 'warn',
 			'@graphql-eslint/naming-convention': [
 				'warn',
 				{
