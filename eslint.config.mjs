@@ -1,68 +1,19 @@
-// @ts-nocheck
-/* eslint-disable import/no-unresolved */
 import baseConfig from '@innovixx/eslint-config/config/configs/base/index.mjs';
 import reactConfig from '@innovixx/eslint-config/config/configs/react/index.mjs';
 import typescriptConfig from '@innovixx/eslint-config/config/configs/typescript/index.mjs';
-import graphqlPlugin from '@graphql-eslint/eslint-plugin';
+import { graphqlConfig } from '@innovixx/eslint-config/config/configs/graphql/index.mjs';
 
 export default [
-	baseConfig,
-	reactConfig,
-	{
-		files: ['**/*.{ts,tsx}'],
-		...typescriptConfig,
-	},
-	{
-		ignores: [
-			'databases',
-			'schema.graphql',
-			'src/lib/generated/**/*.ts',
-		],
-	},
-	{
-		files: ['*.config.ts'],
-		languageOptions: {
-			parserOptions: {
-				project: null,
-			},
-		},
-	},
-	{
-		files: ['**/*.graphql'],
-		languageOptions: {
-			parser: graphqlPlugin.parser,
-		},
-		ignores: [
-			'**/node_modules/**',
-			'src/graphql/schema.graphql',
-			'src/graphql/typeDefs/**/*.graphql',
-		],
-		plugins: {
-			'@graphql-eslint': graphqlPlugin,
-		},
-		rules: {
-			'eol-last': 'warn',
-			'@graphql-eslint/no-anonymous-operations': 'warn',
-			'@graphql-eslint/known-type-names': 'error',
-			'@graphql-eslint/no-duplicate-fields': 'warn',
-			'@graphql-eslint/naming-convention': [
-				'warn',
-				{
-					OperationDefinition: {
-						style: 'PascalCase',
-						forbiddenPrefixes: ['Query', 'Mutation', 'Subscription', 'Get'],
-						forbiddenSuffixes: ['Query', 'Mutation', 'Subscription'],
-					},
-					ObjectTypeDefinition: {
-						style: 'PascalCase',
-					},
-				},
-			],
-		},
-	},
-	{
-		rules: {
-			'import/extensions': 'off',
-		},
-	},
+    baseConfig,
+    reactConfig,
+    typescriptConfig,
+    ...graphqlConfig,
+    {
+        files: ['*.config.ts'],
+        languageOptions: {
+            parserOptions: {
+                project: null,
+            },
+        },
+    },
 ];
