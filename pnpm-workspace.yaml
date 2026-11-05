@@ -9,4 +9,4 @@ allowBuilds:
   unrs-resolver: true
   workerd: true
 minimumReleaseAgeExclude:
-  - '@innovixx/eslint-config@3.0.14 || 4.0.0-alpha.2 || 4.0.0-alpha.3 || 4.0.0-alpha.4 || 4.0.0-alpha.5 || 4.0.0-alpha.6 || 4.0.0-alpha.7 || 4.0.0-alpha.8 || 4.0.0'
+  - '@innovixx/eslint-config@3.0.14 || 4.0.0-alpha.2 || 4.0.0-alpha.3 || 4.0.0-alpha.4 || 4.0.0-alpha.5 || 4.0.0-alpha.6 || 4.0.0-alpha.7 || 4.0.0-alpha.8 || 4.0.0 || 4.0.1'
