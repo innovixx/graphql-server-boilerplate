@@ -16,13 +16,14 @@ This GraphQL server boilerplate provides a basic structure for building servers.
    pnpm install
    ```
 
-3. Start the development server: 
+3. Start the development server with seed data: 
 
    ```bash
-   pnpm dev
+   pnpm build
+   pnpm cleanDev
    ```
 
-   This will start a development server at `http://localhost:3000/api` that you can use to test your GraphQL queries and mutations.
+   This will start a development server at `http://localhost:9000/api/graphql` that you can use to test your GraphQL queries and mutations.
 
 4. To build the production-ready server, run: 
 
