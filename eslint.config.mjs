@@ -4,8 +4,21 @@ import typescriptConfig from '@innovixx/eslint-config/config/configs/typescript/
 import { graphqlConfig } from '@innovixx/eslint-config/config/configs/graphql/index.mjs';
 
 export default [
-    baseConfig,
-    reactConfig,
-    typescriptConfig,
-    ...graphqlConfig,
+	baseConfig,
+	reactConfig,
+	typescriptConfig,
+	...graphqlConfig,
+	{
+		rules: {
+			'import-x/no-cycle': 'off'
+		}
+	},
+	{
+		files: ['*.config.ts'],
+		languageOptions: {
+			parserOptions: {
+				project: null,
+			},
+		},
+	},
 ];
